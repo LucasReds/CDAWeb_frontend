@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
+import Home from "./pages/Home";
+import About from "./pages/About";
 
 export default function Routing() {
   return (
@@ -8,7 +10,7 @@ export default function Routing() {
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/instructions" element={<h1>Pagina instrucciones</h1>} />
-          <Route path="/about-us" element={<h1>Sobre nosotros</h1>} />
+          <Route path="/about-us" element={<About />} />
         </Routes>
       </BrowserRouter>
     </>
