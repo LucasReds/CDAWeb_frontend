@@ -1,0 +1,10 @@
+html {
+    background: linear-gradient(to top, darkgreen, yellow);
+    height: 100%;
+    width: 100%;
+}
+
+@font-face {
+    font-family: 'FFXRNDLT';
+    src: url('./assets/FFXRNDLT.ttf') format('truetype');
+}

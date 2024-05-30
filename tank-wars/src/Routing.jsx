@@ -8,7 +8,7 @@ export default function Routing() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<App />} />
+          <Route path="/" element={<Home />} />
           <Route path="/instructions" element={<h1>Pagina instrucciones</h1>} />
           <Route path="/about-us" element={<About />} />
         </Routes>

@@ -1,11 +1,16 @@
 import React from 'react';
+import './Home.css';
 
 function Home() {
+  const handleClick = () => {
+        alert('Button Clicked!');
+      };
   return (
-    <div>
-      <h1>Home Page</h1>
-      <p>Welcome to Tank Wars!</p>
+    <div class = "title">
+      <h1>Welcome to Tank Wars!</h1>
+      <button class = "play-button" onClick={handleClick}>Click Me!</button>
     </div>
+    
   );
 }
 
