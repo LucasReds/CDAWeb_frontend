@@ -1,0 +1,23 @@
+.standard-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-family: 'FFXRNDLT';
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: center;
+    color: black;
+    background-color: #bada55;
+    border-radius: 50px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.standard-button:hover {
+    background-color: #98ac57;
+}
+
+body {
+    font-family: 'FFXRNDLT';
+}
