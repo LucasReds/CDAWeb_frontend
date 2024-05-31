@@ -21,3 +21,10 @@
 body {
     font-family: 'FFXRNDLT';
 }
+
+.centered-bottom {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }

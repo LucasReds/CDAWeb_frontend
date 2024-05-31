@@ -22,6 +22,9 @@ function Home() {
         <button className="standard-button" onClick={handleClick} style={{ position: 'absolute', top: '10px', right: '10px' }}>
           Customize
         </button>
+        <button className="standard-button centered-bottom" onClick={handleClick}>
+          Rules
+        </button>
       </div>
     </div>
   );
