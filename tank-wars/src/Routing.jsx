@@ -1,16 +1,33 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import App from "./App";
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import About from './pages/About';
+import Rules from './pages/Rules';
+import LoginRegister from './pages/LoginRegister';
+import Navbar from './components/Navbar';
 
-export default function Routing() {
+function Layout({ isLoggedIn, setIsLoggedIn }) {
   return (
     <>
-      <BrowserRouter>
+      <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+      <div className="content">
         <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/instructions" element={<h1>Pagina instrucciones</h1>} />
-          <Route path="/about-us" element={<h1>Sobre nosotros</h1>} />
+          <Route path="/" element={<Home />} />
+          <Route path="/about-us" element={<About />} />
+          <Route path="/rules" element={<Rules />} />
+          <Route path="/login-register" element={<LoginRegister setIsLoggedIn={setIsLoggedIn} />} />
         </Routes>
-      </BrowserRouter>
+      </div>
     </>
+  );
+}
+
+export default function Routing() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  return (
+    <BrowserRouter>
+      <Layout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+    </BrowserRouter>
   );
 }
