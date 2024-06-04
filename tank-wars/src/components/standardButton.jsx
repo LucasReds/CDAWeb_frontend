@@ -1,9 +1,9 @@
-import React from 'react';
-import './standardButton.css';
+import React from "react";
+import "./standardButton.css";
 
 function Button({ onClick, children }) {
   return (
-    <button class="standard-button" onClick={onClick}>
+    <button className="standard-button" onClick={onClick}>
       {children}
     </button>
   );

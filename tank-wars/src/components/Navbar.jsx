@@ -1,12 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import StandardButton from '../components/standardButton';
-import './Navbar.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import StandardButton from "../components/standardButton";
+import "./Navbar.css";
 
 function Navbar({ isLoggedIn, setIsLoggedIn }) {
   const handleLogout = () => {
     setIsLoggedIn(false);
-    alert('Logged out');
+    alert("Logged out");
   };
 
   return (
@@ -25,6 +25,11 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
         <li>
           <Link to="/rules">
             <StandardButton>Rules</StandardButton>
+          </Link>
+        </li>
+        <li>
+          <Link to="/api-test">
+            <StandardButton>API test</StandardButton>
           </Link>
         </li>
         {isLoggedIn ? (
@@ -46,7 +51,11 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
           </li>
         )}
         {/* Visual indicator */}
-        {isLoggedIn && <li><div className="logged-in-indicator">Logged In</div></li>}
+        {isLoggedIn && (
+          <li>
+            <div className="logged-in-indicator">Logged In</div>
+          </li>
+        )}
       </ul>
     </nav>
   );

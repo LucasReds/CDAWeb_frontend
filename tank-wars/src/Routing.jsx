@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import About from './pages/About';
-import Rules from './pages/Rules';
-import LoginRegister from './pages/LoginRegister';
-import Navbar from './components/Navbar';
+import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Rules from "./pages/Rules";
+import LoginRegister from "./pages/LoginRegister";
+import Navbar from "./components/Navbar";
+import ApiTest from "./pages/ApiTest";
 
 function Layout({ isLoggedIn, setIsLoggedIn }) {
   return (
@@ -15,7 +16,11 @@ function Layout({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/" element={<Home />} />
           <Route path="/about-us" element={<About />} />
           <Route path="/rules" element={<Rules />} />
-          <Route path="/login-register" element={<LoginRegister setIsLoggedIn={setIsLoggedIn} />} />
+          <Route
+            path="/login-register"
+            element={<LoginRegister setIsLoggedIn={setIsLoggedIn} />}
+          />
+          <Route path="/api-test" element={<ApiTest />} />
         </Routes>
       </div>
     </>
