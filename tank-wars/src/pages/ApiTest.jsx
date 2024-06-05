@@ -3,7 +3,6 @@ import StandardButton from "../components/standardButton";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-
 export default function ApiTest() {
   const [loading, setLoading] = useState(false);
   const [endpoint, setEndpoint] = useState("/buy");
@@ -36,6 +35,13 @@ export default function ApiTest() {
     ],
   };
 
+  function formatPosition(points) {
+    const [x1, y1, x2, y2] = points;
+    const oldPos = { x: x1, y: y1 };
+    const newPos = { x: x2, y: y2 };
+    return [oldPos, newPos];
+  }
+
   function handleApiTest(endpoint, e) {
     e.preventDefault();
     console.log(`Testing ${endpoint}`);
@@ -44,7 +50,27 @@ export default function ApiTest() {
     const requestParams = {};
     inputList[endpoint].forEach((input) => {
       if (inputValue[input] !== null) {
-        requestParams[input] = inputValue[input];
+        // revisar si es una posicion
+        if (
+          input === "x1" ||
+          input === "y1" ||
+          input === "x2" ||
+          input === "y2"
+        ) {
+          if (requestParams["oldPosition"] && requestParams["newPosition"]) {
+            return;
+          }
+          const [oldPos, newPos] = formatPosition([
+            inputValue["x1"],
+            inputValue["y1"],
+            inputValue["x2"],
+            inputValue["y2"],
+          ]);
+          requestParams["oldPosition"] = oldPos;
+          requestParams["newPosition"] = newPos;
+        } else {
+          requestParams[input] = inputValue[input];
+        }
       }
     });
 
@@ -150,11 +176,16 @@ export default function ApiTest() {
             <p>No response yet</p>
           )}
         </div>
-          
       </div>
-    <div className="documentacion">
-      <Link to="/documentacion"> <StandardButton className="play-button"> Ver Documentacion </StandardButton> </Link>
-    </div>
+      <div className="documentacion">
+        <Link to="/documentacion">
+          {" "}
+          <StandardButton className="play-button">
+            {" "}
+            Ver Documentacion{" "}
+          </StandardButton>{" "}
+        </Link>
+      </div>
     </div>
   );
 }
