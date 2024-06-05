@@ -9,6 +9,7 @@ import ApiTest from "./pages/ApiTest";
 import AdminCheck from "./protected/AdminCheck";
 import UserCheck from "./protected/UserCheck";
 import Register from "./pages/Register";
+import Documentacion from "./pages/DocumentacionApi";
 
 function Layout({ isLoggedIn, setIsLoggedIn }) {
   return (
@@ -27,6 +28,7 @@ function Layout({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/admincheck" element={<AdminCheck />}/>
           <Route path="/usercheck" element={<UserCheck />}/>
           <Route path="/register" element={<Register />}/>
+          <Route path="/documentacion" element={<Documentacion />}/>
         </Routes>
       </div>
     </>
