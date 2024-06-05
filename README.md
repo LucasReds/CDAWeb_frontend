@@ -14,3 +14,7 @@
 - Ir a `API TEST` en la navbar.
 - Correr el repo de backend en local (recordar iniciar postgresql).
 - Elegir un endpoint a testear y llenar los datos.
+
+### AUTH PROFILE
+
+- El botón profile lleva a /protected/UserCheck, el cual es un protected scope, sin embargo, como ese botón solo aparece una vez que el usuario ya está loggeado la verificación del token ya es realizada y queda redundante pero aun así ocurre para propósitos de la entrega. Ahora, si el token esta autorizado mostrará una que esta autorizado pero en caso de borrar el token del local storage y recargar la página le mostrará que no esta autorizado.

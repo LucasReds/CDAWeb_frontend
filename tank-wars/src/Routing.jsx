@@ -6,6 +6,9 @@ import Rules from "./pages/Rules";
 import LoginRegister from "./pages/LoginRegister";
 import Navbar from "./components/Navbar";
 import ApiTest from "./pages/ApiTest";
+import AdminCheck from "./protected/AdminCheck";
+import UserCheck from "./protected/UserCheck";
+
 
 function Layout({ isLoggedIn, setIsLoggedIn }) {
   return (
@@ -21,6 +24,8 @@ function Layout({ isLoggedIn, setIsLoggedIn }) {
             element={<LoginRegister setIsLoggedIn={setIsLoggedIn} />}
           />
           <Route path="/api-test" element={<ApiTest />} />
+          <Route path="/admincheck" element={<AdminCheck />}/>
+          <Route path="/usercheck" element={<UserCheck />}/>
         </Routes>
       </div>
     </>
