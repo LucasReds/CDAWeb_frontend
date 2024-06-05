@@ -1,6 +1,8 @@
 import { useState } from "react";
 import StandardButton from "../components/standardButton";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 
 export default function ApiTest() {
   const [loading, setLoading] = useState(false);
@@ -148,7 +150,11 @@ export default function ApiTest() {
             <p>No response yet</p>
           )}
         </div>
+          
       </div>
+    <div className="documentacion">
+      <Link to="/documentacion"> <StandardButton className="play-button"> Ver Documentacion </StandardButton> </Link>
+    </div>
     </div>
   );
 }

@@ -35,7 +35,7 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
         {isLoggedIn ? (
           <>
             <li>
-              <Link to="/profile">
+              <Link to="/usercheck">
                 <StandardButton>Profile</StandardButton>
               </Link>
             </li>
