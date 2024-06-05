@@ -3,6 +3,8 @@ import axios from 'axios';
 import { AuthContext } from '../auth/AuthContext';
 import '../pages/Home.css';
 
+/* Código extraído de capsulas */
+
 const UserCheck = () => { 
   const { token } = useContext(AuthContext)
   const [status, setStatus] = useState(null);

@@ -2,7 +2,10 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../auth/AuthContext';
 import axios from 'axios';
 import './Home.css';
+import { Link } from "react-router-dom";
+import StandardButton from "../components/standardButton";
 
+/* Código extraído de capsulas */
 
 function LoginRegister({ setIsLoggedIn }) {
   const { token, setToken } = useContext(AuthContext);
@@ -39,33 +42,44 @@ function LoginRegister({ setIsLoggedIn }) {
   };
 
   return (
-    <div className="Login">
-      {msg.length > 0 && <div className="successMsg"> {msg} </div>}
+    <div className='textoBajoNav'>
+      <h1 className='centered-text sub-title'>Login</h1>
+      <div className="Login">
+        {msg.length > 0 && <div className="successMsg"> {msg} </div>}
 
-      {error && <div className="error">Hubo un error con el Login, por favor trata nuevamente.</div>}
-      <form onSubmit={handleLogin}>
-        <label>
-          Username:
-          <input 
-            type="username" 
-            name="username"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password:
-          <input
-            type="password" 
-            name="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <input type="submit" value="Enviar" />
-      </form>
+        {error && <div className="error">Hubo un error con el Login, por favor trata nuevamente.</div>}
+        <form onSubmit={handleLogin}>
+          <label>
+            Username:
+            <input 
+              type="username" 
+              name="username"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Password:
+            <input
+              type="password" 
+              name="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+          </label>
+          <div className='sep'>
+            <StandardButton type="submit" value="Enviar">Enviar</StandardButton>
+          </div>
+        </form>
+        <div className='sep'>
+          <p>Don't have an account?</p>
+          <Link to="/register">
+            <StandardButton>Register</StandardButton>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
