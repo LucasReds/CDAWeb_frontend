@@ -148,3 +148,12 @@ body {
   margin-top: 8%;
   padding: "20px"
 }
+
+.casillas {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-family: "FFXRNDLT" ;
+  font-size: larger;
+  padding: 2%;
+}
