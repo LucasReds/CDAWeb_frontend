@@ -2,6 +2,7 @@ import React from 'react';
 import playButton from '../components/playButton';
 import standardButton from '../components/standardButton';
 import './Home.css';
+import { Link } from 'react-router-dom';
 
 function Home() {
   const handleClick = () => {
@@ -11,9 +12,9 @@ function Home() {
     <div style={{ position: 'relative' }}>
       <div className="title">
         <h1>Tank Wars</h1>
-        <button className="play-button" onClick={handleClick}>
-          Click to Play
-        </button>
+        
+        <Link to="/phaser-game">Start Game</Link>
+        
       </div>
     </div>
   );

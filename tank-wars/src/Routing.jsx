@@ -10,6 +10,7 @@ import AdminCheck from "./protected/AdminCheck";
 import UserCheck from "./protected/UserCheck";
 import Register from "./pages/Register";
 import Documentacion from "./pages/DocumentacionApi";
+import Game from "./pages/Game";
 
 function Layout({ isLoggedIn, setIsLoggedIn }) {
   return (
@@ -29,6 +30,7 @@ function Layout({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/usercheck" element={<UserCheck />}/>
           <Route path="/register" element={<Register />}/>
           <Route path="/documentacion" element={<Documentacion />}/>
+          <Route path="/phaser-game" element={<Game/>} />
         </Routes>
       </div>
     </>
