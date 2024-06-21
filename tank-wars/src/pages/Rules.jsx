@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Rules.css';
+import Store from '../components/store';
 
 function Rules() {
+  const [isStoreOpen, setStoreOpen] = useState(true); // Initially true for testing
+
+  const handleCloseStore = () => {
+    console.log("Store closed");
+    setStoreOpen(false); // Update state to close the store
+  };
+
   return (
     <div style={{ position: 'relative' }}>
       <div className="sub-title">
@@ -28,6 +36,7 @@ function Rules() {
           </li>
         </ol>
       </div>
+      <Store isOpen={isStoreOpen} onClose={handleCloseStore} />
     </div>
   );
 }
