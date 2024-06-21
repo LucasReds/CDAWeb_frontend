@@ -11,6 +11,7 @@ import UserCheck from "./protected/UserCheck";
 import Register from "./pages/Register";
 import Documentacion from "./pages/DocumentacionApi";
 import Game from "./pages/Game";
+import Lobby from "./pages/Lobby";
 
 function Layout({ isLoggedIn, setIsLoggedIn }) {
   return (
@@ -26,11 +27,12 @@ function Layout({ isLoggedIn, setIsLoggedIn }) {
             element={<LoginRegister setIsLoggedIn={setIsLoggedIn} />}
           />
           <Route path="/api-test" element={<ApiTest />} />
-          <Route path="/admincheck" element={<AdminCheck />}/>
-          <Route path="/usercheck" element={<UserCheck />}/>
-          <Route path="/register" element={<Register />}/>
-          <Route path="/documentacion" element={<Documentacion />}/>
-          <Route path="/phaser-game" element={<Game/>} />
+          <Route path="/admincheck" element={<AdminCheck />} />
+          <Route path="/usercheck" element={<UserCheck />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/documentacion" element={<Documentacion />} />
+          <Route path="/lobby/:game_id" element={<Lobby />} />
+          <Route path="/phaser-game/:game_id" element={<Game />} />
         </Routes>
       </div>
     </>

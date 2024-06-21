@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import StandardButton from "../components/standardButton";
 import "./Navbar.css";
+import { AuthContext } from "../auth/AuthContext";
 
 function Navbar({ isLoggedIn, setIsLoggedIn }) {
+  const { token, userId, setToken, setUserId } = useContext(AuthContext);
+
   const handleLogout = () => {
     setIsLoggedIn(false);
     alert("Logged out");
+    setToken(null);
+    setUserId(null);
   };
 
   return (
@@ -32,7 +37,7 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
             <StandardButton>API test</StandardButton>
           </Link>
         </li>
-        {isLoggedIn ? (
+        {userId ? (
           <>
             <li>
               <Link to="/usercheck">
@@ -51,7 +56,7 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
           </li>
         )}
         {/* Visual indicator */}
-        {isLoggedIn && (
+        {userId && (
           <li>
             <div className="logged-in-indicator">Logged In</div>
           </li>
