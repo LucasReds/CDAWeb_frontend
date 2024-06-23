@@ -12,7 +12,7 @@ const Store = ({ isOpen, onClose }) => {
     if (isOpen && userId) { // Ensure userId is available
       console.log("Store opened");
 
-      // Fetch items from the API when the store is opened `http://localhost:3000/getProyectils?playerId=${userId}`
+      // Fetch items from the API when the store is opened 
       axios.get(`http://localhost:3000/getProyectils?playerId=${userId}`)
         .then(response => {
           if (response.data.proyectils) {
@@ -32,6 +32,7 @@ const Store = ({ isOpen, onClose }) => {
           console.error('Error fetching items:', error);
         });
 
+    
       // Fetch player's coins from the API
       axios.get(`http://localhost:3000/getPlayerCoins?playerId=${userId}`)
         .then(response => {

@@ -167,3 +167,31 @@ body {
   font-size: larger;
   padding: 2%;
 }
+
+/* New styles for user table */
+
+.user-table {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: collapse;
+  font-size: 18px;
+  background-color: #f0faff;
+}
+
+.user-table th, .user-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+.user-table th {
+  background-color: #1e90ff;
+  color: white;
+}
+
+.user-table tr:nth-child(even) {
+  background-color: #e9ffe6;
+}
+
+.user-table tr:hover {
+  background-color: #cce5ff;
+}
