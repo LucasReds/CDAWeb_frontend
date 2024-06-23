@@ -35,25 +35,31 @@ const UserCheck = () => {
     <div className="Perfil">
       {status === 'authorized' && userData && (
         <>
-          <h1>Bienvenido a tu Perfil</h1>
-          <table className="user-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Money</th>
-                <th>Level</th>
-                <th>XP</th>
-                <th>Created At</th>
-              </tr>
-            </thead>
+          <h1 className="centered-text">Bienvenido a tu Perfil</h1>
+          <table className="vertical-table">
             <tbody>
               <tr>
+                <td><strong>ID</strong></td>
                 <td>{userData.id}</td>
+              </tr>
+              <tr>
+                <td><strong>Username</strong></td>
                 <td>{userData.username}</td>
+              </tr>
+              <tr>
+                <td><strong>Money</strong></td>
                 <td>{userData.money}</td>
+              </tr>
+              <tr>
+                <td><strong>Level</strong></td>
                 <td>{userData.level}</td>
+              </tr>
+              <tr>
+                <td><strong>XP</strong></td>
                 <td>{userData.xp}</td>
+              </tr>
+              <tr>
+                <td><strong>Created At</strong></td>
                 <td>{new Date(userData.createdAt).toLocaleString()}</td>
               </tr>
             </tbody>
@@ -62,8 +68,8 @@ const UserCheck = () => {
       )}
       {status !== 'authorized' && (
         <>
-          <h1>No estás autorizado para estar aquí</h1>
-          <p>Por favor, inicia sesión para acceder a tu perfil.</p>
+          <h1 className="centered-text">No estás autorizado para estar aquí</h1>
+          <p className="centered-text">Por favor, inicia sesión para acceder a tu perfil.</p>
         </>
       )}
     </div>
