@@ -33,8 +33,8 @@ function Layout({ isLoggedIn, setIsLoggedIn }) {
           <Route path="/register" element={<Register />} />
           <Route path="/documentacion" element={<Documentacion />} />
           <Route path="/lobby/:game_id" element={<Lobby />} />
-          {/* <Route path="/phaser-game/:game_id" element={<Game />} /> */}
-          <Route path="/phaser-game/:game_id" element={<TestPhaser />} />
+          <Route path="/phaser-game/:game_id" element={<Game />} />
+          {/* <Route path="/phaser-game/:game_id" element={<TestPhaser />} /> */}
         </Routes>
       </div>
     </>
