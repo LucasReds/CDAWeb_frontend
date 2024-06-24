@@ -7,7 +7,7 @@ import axios from "axios";
 import { AuthContext } from "../auth/AuthContext";
 
 function Home() {
-  const { userId } = useContext(AuthContext);
+  const { userId, setPlayerId } = useContext(AuthContext);
 
   const [playButtonClicked, setPlayButtonClicked] = useState(false);
   const [createButtonClicked, setCreateButtonClicked] = useState(false);
@@ -128,9 +128,12 @@ function Home() {
       })
       .then((res) => {
         console.log(res.data);
-        if (res.data.partidaID) {
+        if (res.data.playerId) {
+          setPlayerId(res.data.playerId);
+        }
+        if (res.data.data.partidaID) {
           console.log("Redirecting to lobby");
-          navigate(`/lobby/${res.data.partidaID}`);
+          navigate(`/lobby/${res.data.data.partidaID}`);
         }
       });
   };
