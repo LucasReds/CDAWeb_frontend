@@ -24,8 +24,10 @@ export default function Lobby() {
   }, [time]);
 
   useEffect(() => {
-    socket.connect();
+    // join game ROOM on server
+    socket.emit("join-lobby", { partida_id: game_id });
 
+    // recibir start game event
     socket.on("start-game", (data) => {
       console.log(data);
       setLobbyState(true);
@@ -33,7 +35,7 @@ export default function Lobby() {
     });
 
     return () => {
-      socket.disconnect();
+      socket.emit("leave-lobby", { partida_id: game_id });
     };
   }, []);
 
