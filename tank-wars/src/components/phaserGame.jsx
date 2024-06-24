@@ -34,8 +34,8 @@ class Example extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('tank', 'assets/tank.png');
-        this.load.image('turret', 'assets/turret.png');
+        this.load.image('tank', 'src/assets/TankBody.png');
+        this.load.image('turret', 'src/assets/TankTurret.png');
         this.load.image('bullet', 'assets/bullet.png');
     }
 
@@ -78,13 +78,13 @@ class Example extends Phaser.Scene {
             });
         });
 
-        this.player1 = this.matter.add.image(100, 100, null);
+        this.player1 = this.matter.add.image(100, 100, 'tank');
         this.player1.setBounce(0.2);
         this.player1.setFrictionAir(0.0002);
         this.player1.setRectangle(10);
         this.player1.setFriction(1);
 
-        this.player2 = this.matter.add.image(900, 100, null);
+        this.player2 = this.matter.add.image(900, 100, 'tank');
         this.player2.setBounce(0.2);
         this.player2.setFrictionAir(0.0002);
         this.player2.setRectangle(10);
@@ -93,11 +93,12 @@ class Example extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.fireButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        this.turret1 = this.add.image(this.player1.x, this.player1.y, null);
-        this.turret1.setOrigin(0.5, 1);
+        this.turret1 = this.add.image(this.player1.x, this.player1.y, 'turret');
+        this.turret1.setOrigin(0, 0.5);
 
-        this.turret2 = this.add.image(this.player2.x, this.player2.y, null);
-        this.turret2.setOrigin(0.5, 1);
+        this.turret2 = this.add.image(this.player2.x, this.player2.y, 'turret');
+        this.turret2.setOrigin(1, 0.5);
+        this.turret2.flipX = true;
 
 
         this.player1HealthBar = this.add.graphics();
@@ -239,6 +240,7 @@ class Example extends Phaser.Scene {
     }
 
     movePlayerTo(player, x, y) {
+        player.angle = 0;
         this.tweens.add({
             targets: player,
             x: x,
@@ -447,8 +449,10 @@ const PhaserGame = () => {
         if (!gameRef.current) {
             const gameConfig = {
                 type: Phaser.AUTO,
+                autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
+                backgroundColor: '#c4dedf',
                 width: 1000,
-                height: 800,
+                height: 600,
                 physics: {
                     default: 'matter',
                     matter: {
