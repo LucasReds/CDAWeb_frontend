@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 
+
 class TankWarsScene extends Phaser.Scene {
   constructor(gameParams) {
     super({ key: "Example" });
@@ -12,6 +13,9 @@ class TankWarsScene extends Phaser.Scene {
     this.path = gameParams.path;
     this.gameName = gameParams.gameName;
     this.isPlayer1 = this.local_player_id === this.player1_id;
+    this.isOpen = gameParams.isStoreOpen;
+    this.openStore = gameParams.openStore;
+    this.closeStore = gameParams.closeStore;
     // game generic attributes
     this.gameOver = false;
     this.score = 0;
@@ -50,6 +54,8 @@ class TankWarsScene extends Phaser.Scene {
 
   create() {
     // socket config for game duration
+    console.log("store open:", this.isOpen);
+
     this.socket.on("enemy-move", (data) => {
       console.log("enemy moved !!!!");
       this.makeEnemyMove(data);
@@ -201,6 +207,13 @@ class TankWarsScene extends Phaser.Scene {
       return;
     }
 
+    if (this.isOpen) {
+      console.log("store open");
+      this.closeStore();
+    } else {
+      //console.log("store closed");
+    }
+
     // if (this.isPlayer1Turn && this.host) {
     //   this.scene.pause();
     // }
@@ -224,6 +237,13 @@ class TankWarsScene extends Phaser.Scene {
       this.enemyPlayer,
       this.enemyPlayerHealth
     );
+   
+    if (this.isOpen) {
+      //this.openStore();
+    } else {
+      //this.closeStore();
+    };
+
     if (
       (this.isPlayer1Turn && this.isPlayer1) ||
       (!this.isPlayer1Turn && !this.isPlayer1)
@@ -300,6 +320,14 @@ class TankWarsScene extends Phaser.Scene {
       lostHealthWidth,
       healthBarHeight
     );
+  }
+
+  openStore() {
+    console.log("Store opened");
+  }
+
+  closeStore() {
+    console.log("Store closed");
   }
 
   updateMoveGuide(pointer) {
@@ -594,5 +622,6 @@ class Bullet extends Phaser.Physics.Matter.Image {
     }
   }
 }
+
 
 export default TankWarsScene;

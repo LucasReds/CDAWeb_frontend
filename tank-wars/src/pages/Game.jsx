@@ -1,20 +1,38 @@
 // App.js or equivalent
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState} from "react";
 import PhaserGame from "../components/phaserGame"; // Adjust path as needed
 import { AuthContext } from "../auth/AuthContext";
 import axios from "axios";
+import Store from "../components/store";
+import './Game.css'; // Make sure to import your CSS file
 
-function Game() {
+const Game = () => {
+  const [isStoreOpen, setIsStoreOpen] = useState(false);
+
+  const openStore = () => {
+    console.log("Store opened");
+    setIsStoreOpen(true);
+  };
+
+  const closeStore = () => {
+    console.log("Store closed");
+    setIsStoreOpen(false);
+  };
+
   return (
     <div className="Game">
       <header className="App-header">
-        <h1>Phaser Game in React</h1>
+        {/* Header content can go here */}
       </header>
-      <main>
-        <PhaserGame />
-      </main>
+      <div className="game-wrapper">
+        {isStoreOpen && <Store isOpen={isStoreOpen} onClose={closeStore} />}
+        <div className="game-container">
+          <PhaserGame isStoreOpen={isStoreOpen} openStore={openStore} closeStore={closeStore} />
+          <button className="open-store-button" onClick={openStore}>Open Store</button>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default Game;
