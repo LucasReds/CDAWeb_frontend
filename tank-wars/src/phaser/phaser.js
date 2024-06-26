@@ -44,6 +44,7 @@ class TankWarsScene extends Phaser.Scene {
     this.explosionRadius = 50;
     this.maxDamage = 20;
     this.explosionDuration = 1000;
+    this.turnStage = 'buy'; // Possible values: 'buy', 'move', 'shoot'
   }
 
   preload() {
@@ -243,33 +244,16 @@ class TankWarsScene extends Phaser.Scene {
       (this.isPlayer1Turn && this.isPlayer1) ||
       (!this.isPlayer1Turn && !this.isPlayer1)
     ) {
-      // verify is buy stage
-
-      // verify is move stage
-
-      // etc...
-
-      // if its this local player's turn
-      // make player controllable
-      if (this.cursors.up.isDown) {
-        this.localTurretAngle -= 0.05;
-      } else if (this.cursors.down.isDown) {
-        this.localTurretAngle += 0.05;
-      }
-
-      if (this.fireButton.isDown && time > this.lastFired) {
-        this.socket.emit("make-move-shoot", {
-          partida_id: this.partida_id,
-          player_id: this.local_player_id,
-          angle: this.localTurretAngle,
-        });
-        this.fireBullet(
-          this.localPlayer,
-          this.localTurret,
-          this.localTurretAngle
-        );
-        this.lastFired = time + 500;
-        this.isPlayer1Turn = !this.isPlayer1Turn;
+      switch (this.turnStage) {
+        case 'buy':
+            // this.handleBuyStage();
+            break;
+        case 'move':
+            this.handleMoveStage();
+            break;
+        case 'shoot':
+            this.handleShootStage(time);
+            break;
       }
     } else {
       // disable local player
@@ -292,6 +276,36 @@ class TankWarsScene extends Phaser.Scene {
       })
     }
   }
+
+  handleBuyStage() {
+    // Disable movement and shooting while buying
+    this.input.keyboard.enabled = false;
+    this.input.on('pointerdown', this.purchaseItem, this);
+
+    // Ensure the store opens only once and remains open until purchase is complete
+    if (this.isOpen) {
+        return;
+    }
+
+    // Additional logic for handling the buy stage: UI?
+    if (!this.isOpen) {
+        this.openStore();
+    }
+  }
+  handleMoveStage() {
+    this.input.on('pointerdown', (pointer) => {
+        // Move the player character to the clicked position
+        this.handlePointerDown(pointer);
+        this.socket.emit("make-move", {
+          partida_id: this.partida_id,
+          player_id: this.local_player_id,
+          x: this.localPlayer.x,
+          y: this.localPlayer.y
+        });
+        // Proceed to the next stage
+        this.turnStage = "shoot";
+    });
+}
   makeEnemyShoot(data) {
     this.enemyTurretAngle = data.angle;
     this.fireBullet(this.enemyPlayer, this.enemyTurret, this.enemyTurretAngle);
