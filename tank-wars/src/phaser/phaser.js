@@ -194,11 +194,17 @@ class TankWarsScene extends Phaser.Scene {
 
     // Add a circle graphics for the move guide
     this.moveGuide = this.add.graphics();
-    this.input.on("pointermove", this.updateMoveGuide, this);
-    this.input.on("pointerdown", this.handlePointerDown, this);
+
+    this.socket.on("enemy-move-shoot", (data) => {
+      this.makeEnemyShoot(data);
+    });
+    this.socket.on("enemy-move", (data) => {
+      this.makeEnemyMove(data);
+    });
   }
 
   update(time, delta) {
+
     if (this.gameOver) {
       return;
     }
@@ -244,15 +250,17 @@ class TankWarsScene extends Phaser.Scene {
       (this.isPlayer1Turn && this.isPlayer1) ||
       (!this.isPlayer1Turn && !this.isPlayer1)
     ) {
+      console.log("your turn");
       switch (this.turnStage) {
         case 'buy':
             // this.handleBuyStage();
+            this.turnStage = "move";
             break;
         case 'move':
             this.handleMoveStage();
             break;
         case 'shoot':
-            this.handleShootStage(time);
+            this.handleShootStage();
             break;
       }
     } else {
@@ -268,12 +276,6 @@ class TankWarsScene extends Phaser.Scene {
       //   this.lastFired = time + 500;
       //   this.isPlayer1Turn = !this.isPlayer1Turn;
       // }
-      this.socket.on("enemy-move-shoot", (data) => {
-        this.makeEnemyShoot(data);
-      });
-      this.socket.on("enemy-move", (data) => {
-        this.makeEnemyMove(data);
-      })
     }
   }
 
@@ -287,33 +289,38 @@ class TankWarsScene extends Phaser.Scene {
         return;
     }
 
-    // Additional logic for handling the buy stage: UI?
+    // Need UI?
     if (!this.isOpen) {
         this.openStore();
     }
   }
   handleMoveStage() {
+    this.input.on("pointermove", this.updateMoveGuide, this);
     this.input.on('pointerdown', (pointer) => {
         // Move the player character to the clicked position
         this.handlePointerDown(pointer);
-        this.socket.emit("make-move", {
-          partida_id: this.partida_id,
-          player_id: this.local_player_id,
-          x: this.localPlayer.x,
-          y: this.localPlayer.y
-        });
         // Proceed to the next stage
         this.turnStage = "shoot";
     });
-}
+  }
+  handleShootStage() {
+    if (this.fireButton.isDown) {
+      this.socket.emit("make-move-shoot", {
+        partida_id: this.partida_id,
+        player_id: this.local_player_id,
+        angle: this.localTurretAngle
+      });
+      this.fireBullet(this.localPlayer, this.localTurret, this.localTurretAngle);
+      this.isPlayer1Turn = !this.isPlayer1Turn;
+    }
+  }
   makeEnemyShoot(data) {
     this.enemyTurretAngle = data.angle;
     this.fireBullet(this.enemyPlayer, this.enemyTurret, this.enemyTurretAngle);
     this.isPlayer1Turn = !this.isPlayer1Turn;
   }
   makeEnemyMove(data) {
-    this.enemyPlayer.x = data.x;
-    this.enemyPlayer.y = data.y;
+    this.movePlayerTo(this.enemyPlayer, data.x, data.y);
   }
 
   updateHealthBar(healthBar, player, health) {
@@ -379,6 +386,12 @@ class TankWarsScene extends Phaser.Scene {
 
       // const targetPlayer = this.isPlayer1Turn ? this.player1 : this.player2;
       this.movePlayerTo(targetPlayer, x, y);
+      this.socket.emit("make-move", {
+        partida_id: this.partida_id,
+        player_id: this.local_player_id,
+        x: this.localPlayer.x,
+        y: this.localPlayer.y
+      });
       // no queremos que cambie despues del mov sino del disparo
       //this.isPlayer1Turn = !this.isPlayer1Turn;
     }
