@@ -64,8 +64,9 @@ export default function PhaserGame(store) {
     if (gameInitData) {
       const gameConfig = {
         type: Phaser.AUTO,
-        width: 1000,
-        height: 800,
+        autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
+        width: 1200,
+        height: 600,
         physics: {
           default: "matter",
           matter: {

@@ -47,8 +47,8 @@ class TankWarsScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("tank", "assets/tank.png");
-    this.load.image("turret", "assets/turret.png");
+    this.load.image("tank", "../src/assets/TankBody.png");
+    this.load.image("turret", "../src/assets/TankTurret.png");
     this.load.image("bullet", "assets/bullet.png");
   }
 
@@ -138,11 +138,11 @@ class TankWarsScene extends Phaser.Scene {
     });
 
     if (this.isPlayer1) {
-      this.localPlayer = this.matter.add.image(400, 100, null);
-      this.enemyPlayer = this.matter.add.image(900, 100, null);
+      this.localPlayer = this.matter.add.image(400, 100, 'tank');
+      this.enemyPlayer = this.matter.add.image(900, 100, 'tank');
     } else {
-      this.localPlayer = this.matter.add.image(900, 100, null);
-      this.enemyPlayer = this.matter.add.image(400, 100, null);
+      this.localPlayer = this.matter.add.image(900, 100, 'tank');
+      this.enemyPlayer = this.matter.add.image(400, 100, 'tank');
     }
     this.localPlayer.setBounce(0.2);
     this.localPlayer.setFrictionAir(0.0002);
@@ -162,16 +162,16 @@ class TankWarsScene extends Phaser.Scene {
     this.localTurret = this.add.image(
       this.localPlayer.x,
       this.localPlayer.y,
-      null
+      'turret'
     );
-    this.localTurret.setOrigin(0.5, 1);
+    this.localTurret.setOrigin(0.5, 0.5);
 
     this.enemyTurret = this.add.image(
       this.enemyPlayer.x,
       this.enemyPlayer.y,
-      null
+      'turret'
     );
-    this.enemyTurret.setOrigin(0.5, 1);
+    this.enemyTurret.setOrigin(0.5, 0.5);
 
     this.localHealthBar = this.add.graphics();
     //console.log('Player 1 Health:', this.healthPlayer1);
@@ -220,12 +220,12 @@ class TankWarsScene extends Phaser.Scene {
     //console.log('Player 1 Health:', this.healthPlayer1);
 
     this.localTurret.x = this.localPlayer.x;
-    this.localTurret.y = this.localPlayer.y - 20;
+    this.localTurret.y = this.localPlayer.y - 10;
     this.localTurret.rotation = this.localTurretAngle;
 
     this.enemyTurret.x = this.enemyPlayer.x;
-    this.enemyTurret.y = this.enemyPlayer.y - 20;
-    this.enemyTurret.rotation = this.enemyTurretAngle * -1;
+    this.enemyTurret.y = this.enemyPlayer.y - 10;
+    this.enemyTurret.rotation = this.enemyTurretAngle;
 
     this.updateHealthBar(
       this.localHealthBar,
@@ -393,10 +393,10 @@ class TankWarsScene extends Phaser.Scene {
       onComplete: () => {
         if (player === this.localPlayer) {
           this.localTurret.x = player.x;
-          this.localTurret.y = player.y - 20;
+          this.localTurret.y = player.y - 10;
         } else {
           this.enemyTurret.x = player.x;
-          this.enemyTurret.y = player.y - 20;
+          this.enemyTurret.y = player.y - 10;
         }
       },
     });
