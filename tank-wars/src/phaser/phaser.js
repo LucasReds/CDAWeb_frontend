@@ -56,11 +56,6 @@ class TankWarsScene extends Phaser.Scene {
     // socket config for game duration
     console.log("store open:", this.isOpen);
 
-    this.socket.on("enemy-move", (data) => {
-      console.log("enemy moved !!!!");
-      this.makeEnemyMove(data);
-    });
-
     // titulo de la partida
     this.add.text(20, 20, `Partida: ${this.gameName}`, { fill: "#0f0" });
 
@@ -263,7 +258,7 @@ class TankWarsScene extends Phaser.Scene {
       }
 
       if (this.fireButton.isDown && time > this.lastFired) {
-        this.socket.emit("make-move", {
+        this.socket.emit("make-move-shoot", {
           partida_id: this.partida_id,
           player_id: this.local_player_id,
           angle: this.localTurretAngle,
@@ -289,12 +284,22 @@ class TankWarsScene extends Phaser.Scene {
       //   this.lastFired = time + 500;
       //   this.isPlayer1Turn = !this.isPlayer1Turn;
       // }
+      this.socket.on("enemy-move-shoot", (data) => {
+        this.makeEnemyShoot(data);
+      });
+      this.socket.on("enemy-move", (data) => {
+        this.makeEnemyMove(data);
+      })
     }
   }
-  makeEnemyMove(data) {
+  makeEnemyShoot(data) {
     this.enemyTurretAngle = data.angle;
     this.fireBullet(this.enemyPlayer, this.enemyTurret, this.enemyTurretAngle);
     this.isPlayer1Turn = !this.isPlayer1Turn;
+  }
+  makeEnemyMove(data) {
+    this.enemyPlayer.x = data.x;
+    this.enemyPlayer.y = data.y;
   }
 
   updateHealthBar(healthBar, player, health) {
@@ -431,33 +436,6 @@ class TankWarsScene extends Phaser.Scene {
 
     return path.trim();
   }
-
-  // RANDOM PATH GENERATOR
-  // generateRandomPathString() {
-  //   const numPoints = Phaser.Math.Between(20, 30);
-  //   const minY = 300;
-  //   const maxY = this.sys.game.config.height;
-
-  //   let path = `0 ${maxY} `;
-
-  //   let lastY = 0;
-
-  //   for (let i = 1; i < numPoints; i++) {
-  //     const x = (this.sys.game.config.width / numPoints) * i;
-  //     if (i % 2 === 0) {
-  //       const y = lastY;
-  //       path += `${x} ${y} `;
-  //     } else {
-  //       const y = Phaser.Math.Between(minY, maxY);
-  //       path += `${x} ${y} `;
-  //       lastY = y;
-  //     }
-  //   }
-
-  //   path += `${this.sys.game.config.width} ${maxY}`;
-
-  //   return path.trim();
-  // }
 
   drawTerrain(path) {
     this.terrainGraphics.clear();
