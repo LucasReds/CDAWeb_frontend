@@ -14,9 +14,15 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     localStorage.setItem("token", token);
+  }, [token]);
+
+  useEffect(() => {
     localStorage.setItem("user_id", userId);
+  }, [userId]);
+
+  useEffect(() => {
     localStorage.setItem("player_id", playerId);
-  }, [token, userId, playerId]);
+  }, [playerId]);
 
   return (
     <AuthContext.Provider

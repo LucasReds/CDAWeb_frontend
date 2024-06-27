@@ -127,7 +127,7 @@ function Home() {
         user_id: userId,
       })
       .then((res) => {
-        console.log(res.data);
+        console.log("join data: ", res.data);
         if (res.data.playerId) {
           setPlayerId(res.data.playerId);
         }

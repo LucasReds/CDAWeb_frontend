@@ -6,6 +6,7 @@ import { AuthContext } from "../auth/AuthContext";
 
 function Navbar({ isLoggedIn, setIsLoggedIn }) {
   const { token, userId, setToken, setUserId } = useContext(AuthContext);
+  console.log(userId, typeof userId);
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -37,7 +38,7 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
             <StandardButton>API test</StandardButton>
           </Link>
         </li>
-        {userId ? (
+        {userId && userId !== "null" ? (
           <>
             <li>
               <Link to="/usercheck">
@@ -56,7 +57,7 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
           </li>
         )}
         {/* Visual indicator */}
-        {userId && (
+        {userId && userId !== "null" && (
           <li>
             <div className="logged-in-indicator">Logged In</div>
           </li>
