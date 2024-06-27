@@ -25,7 +25,6 @@ class TankWarsScene extends Phaser.Scene {
     this.enemyPlayer = null;
     this.localTurret = null;
     this.enemyTurret = null;
-    this.bullets = null;
     this.fireButton = null;
     this.localTurretAngle = 0;
     this.enemyTurretAngle = 0;
@@ -179,12 +178,6 @@ class TankWarsScene extends Phaser.Scene {
     //console.log('Player 2 Health:', this.healthPlayer2);
     //this.player2HealthBar.fillStyle(0x00ff00, 1);
     //this.player2HealthBar.fillRect(790, 10, this.healthPlayer2 * 2, 20);
-
-    this.bullets = this.add.group({
-      classType: Bullet,
-      maxSize: 10,
-      runChildUpdate: true,
-    });
 
     this.lastFired = 0;
     //this.updateHealthBar(this.player1HealthBar, this.player1, this.healthPlayer1);
@@ -456,7 +449,8 @@ class TankWarsScene extends Phaser.Scene {
 }
 
   fireBullet(player, turret, turretAngle) {
-    const bullet = this.bullets.get();
+    const bullet = new Bullet(this, 0, 0, "bullet");
+    this.add.existing(bullet);
 
     if (bullet) {
       let angle = turretAngle;
@@ -636,12 +630,10 @@ class Bullet extends Phaser.Physics.Matter.Image {
     this.setVelocity(Math.cos(angle) * velocity, Math.sin(angle) * velocity);
     this.setActive(true);
     this.setVisible(true);
-    console.log("Bullet properties FIRED:", this);
   }
 
   update() {
     if (this.active && this.y > this.scene.sys.game.config.height) {
-      console.log("Bullet out of bounds or touching ground");
       this.setActive(false);
       this.setVisible(false);
       this.destroy();
