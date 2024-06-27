@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { AuthContext } from "../auth/AuthContext";
 import axios from "axios";
 import { socket } from "../socket";
+import Store from "./store";
 
 export default function TestPhaser() {
   const gameRef = useRef(null);

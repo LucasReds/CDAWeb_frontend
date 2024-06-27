@@ -5,7 +5,10 @@ import { AuthContext } from "../auth/AuthContext";
 import axios from "axios";
 import { socket } from "../socket";
 
-export default function PhaserGame() {
+
+
+export default function PhaserGame(store) {
+  const { isStoreOpen, openStore, closeStore } = store;
   const gameRef = useRef(null);
 
   const { game_id } = useParams();
@@ -13,6 +16,7 @@ export default function PhaserGame() {
 
   const [gameInitData, setGameInitData] = useState(null);
   const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     // -----------------------------------------
@@ -60,8 +64,9 @@ export default function PhaserGame() {
     if (gameInitData) {
       const gameConfig = {
         type: Phaser.AUTO,
-        width: 1000,
-        height: 800,
+        autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
+        width: 1200,
+        height: 600,
         physics: {
           default: "matter",
           matter: {
@@ -77,6 +82,9 @@ export default function PhaserGame() {
           gameName: gameInitData.gameName,
           player1_id: gameInitData.player1,
           player2_id: gameInitData.player2,
+          isStoreOpen: isStoreOpen,
+          openStore: openStore,
+          closeStore: closeStore,
         }),
       };
 
@@ -85,13 +93,12 @@ export default function PhaserGame() {
     }
 
     return () => {
-      // Clean up Phaser game instance when component unmounts
       if (gameRef.current) {
         gameRef.current.destroy(true);
         gameRef.current = null;
       }
     };
-  }, [gameInitData]);
+  }, [gameInitData, isStoreOpen, openStore, closeStore]);
 
   return loading ? <div>LOADING... </div> : <div id="phaser-container" />;
 }

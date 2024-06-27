@@ -10,7 +10,7 @@ const Store = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen && userId) { // Ensure userId is available
-      console.log("Store opened");
+      //console.log("Store opened");
 
       // Fetch items from the API when the store is opened 
       axios.get(`http://localhost:3000/getProyectils?playerId=${userId}`)
