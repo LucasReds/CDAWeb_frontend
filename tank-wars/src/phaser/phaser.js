@@ -278,6 +278,11 @@ class TankWarsScene extends Phaser.Scene {
           }
           break;
         case 'shoot':
+            if(this.cursors.up.isDown) {
+              this.localTurretAngle -= 0.05;
+            } else if(this.cursors.down.isDown) {
+              this.localTurretAngle += 0.05;
+            }
             if (this.fireButton.isDown && time > this.lastFired) {
               this.socket.emit("make-move-shoot", {
                 partida_id: this.partida_id,
