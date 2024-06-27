@@ -3,7 +3,7 @@ import Phaser from "phaser";
 
 class TankWarsScene extends Phaser.Scene {
   constructor(gameParams) {
-    super({ key: "Example" });
+    super({ key: "TankWarsScene" });
     // game init attributes
     this.partida_id = gameParams.partida_id;
     this.socket = gameParams.socket;
@@ -49,10 +49,11 @@ class TankWarsScene extends Phaser.Scene {
   preload() {
     this.load.image("tank", "../src/assets/TankBody.png");
     this.load.image("turret", "../src/assets/TankTurret.png");
-    this.load.image("bullet", "assets/bullet.png");
+    this.load.image("bullet", "../src/assets/TankBullet.png");
   }
 
   create() {
+    console.log("game created");
     // socket config for game duration
     console.log("store open:", this.isOpen);
 
@@ -135,9 +136,12 @@ class TankWarsScene extends Phaser.Scene {
     if (this.isPlayer1) {
       this.localPlayer = this.matter.add.image(400, 100, 'tank');
       this.enemyPlayer = this.matter.add.image(900, 100, 'tank');
+      console.log("1 player 1 checking initialization", this.localPlayer, this.enemyPlayer);
     } else {
       this.localPlayer = this.matter.add.image(900, 100, 'tank');
       this.enemyPlayer = this.matter.add.image(400, 100, 'tank');
+      console.log("2 player 1 checking initialization", this.localPlayer, this.enemyPlayer);
+
     }
     this.localPlayer.setBounce(0.2);
     this.localPlayer.setFrictionAir(0.0002);
@@ -243,7 +247,7 @@ class TankWarsScene extends Phaser.Scene {
       (this.isPlayer1Turn && this.isPlayer1) ||
       (!this.isPlayer1Turn && !this.isPlayer1)
     ) {
-      console.log("your turn");
+      console.log("your turn in stage", this.turnStage);
       switch (this.turnStage) {
         case 'buy':
             // this.handleBuyStage();
@@ -296,6 +300,7 @@ class TankWarsScene extends Phaser.Scene {
               );
               this.lastFired = time + 500;
               this.isPlayer1Turn = !this.isPlayer1Turn;
+              this.turnStage = "buy";
             }
             break;
       }
@@ -331,7 +336,10 @@ class TankWarsScene extends Phaser.Scene {
     }
   }
   makeEnemyShoot(data) {
+    console.log("HERE");
     this.enemyTurretAngle = data.angle;
+    console.log("firing bullet");
+    console.log("enemy player loca data", this.enemyPlayer, this.enemyTurret, this.enemyTurretAngle);
     this.fireBullet(this.enemyPlayer, this.enemyTurret, this.enemyTurretAngle);
     this.isPlayer1Turn = !this.isPlayer1Turn;
   }
@@ -451,10 +459,11 @@ class TankWarsScene extends Phaser.Scene {
             }
         },
     });
-}
+  }
 
   fireBullet(player, turret, turretAngle) {
-    const bullet = new Bullet(this, 0, 0, "bullet");
+    console.log("fireBullet called. Player:", player, "Turret:", turret, "TurretAngle:", turretAngle);
+    const bullet = new Bullet(this, 0, 0, "bullet"); // Ensure 'this' (the scene) is passed correctly
     this.add.existing(bullet);
 
     if (bullet) {
@@ -468,10 +477,11 @@ class TankWarsScene extends Phaser.Scene {
       ) {
         angle = Phaser.Math.DegToRad(180) + turretAngle; // Invierte el ángulo
       }
-
+      console.log("Bullet will be fired. Angle:", angle, "Velocity:", velocity);
       bullet.fire(turret.x, turret.y, angle, velocity);
     }
   }
+
 
   generatePath() {
     const maxY = this.sys.game.config.height;
@@ -601,14 +611,13 @@ class TankWarsScene extends Phaser.Scene {
 
 // revisar
 class Bullet extends Phaser.Physics.Matter.Image {
-  constructor(scene, x, y) {
-    super(scene.matter.world, x, y, "bullet");
+  constructor(scene, x, y, texture) {
+    super(scene.matter.world, x, y, texture);
+    this.scene = scene; // Set the scene reference here
     scene.add.existing(this);
 
     this.setCircle(5);
     this.setIgnoreGravity(false);
-
-    this.scene = scene;
 
     this.scene.matter.world.on("collisionstart", (event, bodyA, bodyB) => {
       if (
@@ -645,6 +654,7 @@ class Bullet extends Phaser.Physics.Matter.Image {
     }
   }
 }
+
 
 
 export default TankWarsScene;
