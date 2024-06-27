@@ -257,10 +257,48 @@ class TankWarsScene extends Phaser.Scene {
             this.turnStage = "move";
             break;
         case 'move':
-            this.handleMoveStage();
-            break;
+          this.input.on("pointermove", this.updateMoveGuide, this);
+          if (this.input.activePointer.isDown) {
+              console.log("pointer down");
+              console.log("x, y:", this.localPlayer.x, this.localPlayer.y);
+              const x = this.input.activePointer.x;
+              const y = this.input.activePointer.y;
+
+              if (this.isValidMove(x, y)) {
+                  let targetPlayer;
+                  if ((this.isPlayer1Turn && this.isPlayer1) || (!this.isPlayer1Turn && !this.isPlayer1)) {
+                      targetPlayer = this.localPlayer;
+                  } else {
+                      targetPlayer = this.enemyPlayer;
+                  }
+
+                  this.movePlayerTo(targetPlayer, x, y, () => {
+                      this.socket.emit("make-move", {
+                          partida_id: this.partida_id,
+                          player_id: this.local_player_id,
+                          x: this.localPlayer.x,
+                          y: this.localPlayer.y,
+                      });
+                      this.turnStage = "shoot";
+                  });
+              }
+          }
+          break;
         case 'shoot':
-            this.handleShootStage();
+            if (this.fireButton.isDown && time > this.lastFired) {
+              this.socket.emit("make-move-shoot", {
+                partida_id: this.partida_id,
+                player_id: this.local_player_id,
+                angle: this.localTurretAngle,
+              });
+              this.fireBullet(
+                this.localPlayer,
+                this.localTurret,
+                this.localTurretAngle
+              );
+              this.lastFired = time + 500;
+              this.isPlayer1Turn = !this.isPlayer1Turn;
+            }
             break;
       }
     } else {
@@ -292,26 +330,6 @@ class TankWarsScene extends Phaser.Scene {
     // Need UI?
     if (!this.isOpen) {
         this.openStore();
-    }
-  }
-  handleMoveStage() {
-    this.input.on("pointermove", this.updateMoveGuide, this);
-    this.input.on('pointerdown', (pointer) => {
-        // Move the player character to the clicked position
-        this.handlePointerDown(pointer);
-        // Proceed to the next stage
-        this.turnStage = "shoot";
-    });
-  }
-  handleShootStage() {
-    if (this.fireButton.isDown) {
-      this.socket.emit("make-move-shoot", {
-        partida_id: this.partida_id,
-        player_id: this.local_player_id,
-        angle: this.localTurretAngle
-      });
-      this.fireBullet(this.localPlayer, this.localTurret, this.localTurretAngle);
-      this.isPlayer1Turn = !this.isPlayer1Turn;
     }
   }
   makeEnemyShoot(data) {
@@ -415,24 +433,27 @@ class TankWarsScene extends Phaser.Scene {
     return false;
   }
 
-  movePlayerTo(player, x, y) {
+  movePlayerTo(player, x, y, onComplete) {
     this.tweens.add({
-      targets: player,
-      x: x,
-      y: y - 20,
-      duration: 1000,
-      ease: "Power2",
-      onComplete: () => {
-        if (player === this.localPlayer) {
-          this.localTurret.x = player.x;
-          this.localTurret.y = player.y - 10;
-        } else {
-          this.enemyTurret.x = player.x;
-          this.enemyTurret.y = player.y - 10;
-        }
-      },
+        targets: player,
+        x: x,
+        y: y - 20,
+        duration: 1000,
+        ease: "Power2",
+        onComplete: () => {
+            if (player === this.localPlayer) {
+                this.localTurret.x = player.x;
+                this.localTurret.y = player.y - 10;
+            } else {
+                this.enemyTurret.x = player.x;
+                this.enemyTurret.y = player.y - 10;
+            }
+            if (onComplete) {
+                onComplete();
+            }
+        },
     });
-  }
+}
 
   fireBullet(player, turret, turretAngle) {
     const bullet = this.bullets.get();
