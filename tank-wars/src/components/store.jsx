@@ -4,9 +4,13 @@ import { AuthContext } from '../auth/AuthContext'; // Import AuthContext
 import './store.css'; // Link to store styles
 
 const Store = ({ isOpen, onClose }) => {
-  const { userId } = useContext(AuthContext); // Retrieve userId from context
+  const { playerId } = useContext(AuthContext); // Retrieve userId from context
   const [items, setItems] = useState([]);
   const [coins, setCoins] = useState(0); // Initialize coins with 0
+
+  const userId = playerId;
+
+  console.log("id:", userId);
 
   useEffect(() => {
     if (isOpen && userId) { // Ensure userId is available
