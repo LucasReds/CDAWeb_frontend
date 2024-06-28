@@ -1,38 +1,46 @@
 /* Game.css */
 
 .Game {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .game-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    margin-top: 60px; /* Adjust based on the height of your navbar */
-  }
-  
-  #phaser-game {
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-  }
-  
-  .open-store-button {
-    position: absolute;
-    top: 60px; /* Adjust based on the height of your navbar */
-    left: 60%; /* Adjust as needed */
-    z-index: 2; /* Ensure it's above the Phaser game */
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .open-store-button:hover {
-    background-color: #218838;
-  }
-  
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.game-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin-top: 60px; /* Adjust based on the height of your navbar */
+}
+
+#phaser-game {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.open-store-button {
+  position: absolute;
+  top: 60px; /* Adjust based on the height of your navbar */
+  left: 60%; /* Adjust as needed */
+  z-index: 2; /* Ensure it's above the Phaser game */
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.open-store-button:hover {
+  background-color: #218838;
+}
+
+.open-store-button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+.hidden {
+  display: none; /* Hide the element */
+}

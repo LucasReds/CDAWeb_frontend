@@ -264,3 +264,20 @@ body {
   text-shadow: 4px 4px rgba(195, 73, 226, 0.774);
   font-weight: bold;
 }
+
+.password-checklist ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.password-checklist li {
+  margin: 5px 0;
+}
+
+.password-checklist .valid {
+  color: green;
+}
+
+.password-checklist .invalid {
+  color: red;
+}

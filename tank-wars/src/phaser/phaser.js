@@ -199,6 +199,17 @@ class TankWarsScene extends Phaser.Scene {
     //this.updateHealthBar(this.player1HealthBar, this.player1, this.healthPlayer1);
     //this.updateHealthBar(this.player2HealthBar, this.player2, this.healthPlayer2);
 
+    window.addEventListener('store-closed', () => {
+      this.isStoreOpen = false;
+      console.log("turnStage = move")
+      this.turnStage = "move";
+    });
+
+    window.addEventListener('store-opened', () => {
+      this.isStoreOpen = true;
+      //this.turnStage = "move";
+    });
+
     //console.log('Player 1 Health:', this.healthPlayer1);
 
     // Add a circle graphics for the move guide
@@ -247,13 +258,6 @@ class TankWarsScene extends Phaser.Scene {
       return;
     }
 
-    if (this.isOpen) {
-      console.log("store open");
-      this.closeStore();
-    } else {
-      //console.log("store closed");
-    }
-
     // if (this.isPlayer1Turn && this.host) {
     //   this.scene.pause();
     // }
@@ -278,23 +282,25 @@ class TankWarsScene extends Phaser.Scene {
       this.enemyPlayerHealth
     );
 
-    if (this.isOpen) {
-      //this.openStore();
-    } else {
-      //this.closeStore();
-    }
-
     if (
       (this.isPlayer1Turn && this.isPlayer1) ||
       (!this.isPlayer1Turn && !this.isPlayer1)
     ) {
       console.log("your turn in stage", this.turnStage);
+      window.dispatchEvent(new CustomEvent('turnStageChanged', { detail: this.turnStage }));
+
       switch (this.turnStage) {
         case "buy":
-          // this.handleBuyStage();
-          this.turnStage = "move";
-          break;
+          //this.input.on("pointermove", null, this);
+          if (this.isOpen) {
+            //console.log("store is opened, buy stage confirmed")
+            this.input.keyboard.enabled = false;
+          } else {
+            this.input.keyboard.enable = true
+          }
+          
         case "move":
+          this.input.keyboard.enabled = true;
           this.input.on("pointermove", this.updateMoveGuide, this);
           if (this.input.activePointer.isDown) {
             console.log("pointer down");
@@ -339,7 +345,7 @@ class TankWarsScene extends Phaser.Scene {
                   );
                 }
               });
-              // this.gettingData = false;
+              // this.gettingData = false
             }
           }
           break;
@@ -384,6 +390,7 @@ class TankWarsScene extends Phaser.Scene {
             );
             this.lastFired = time + 500;
             this.isPlayer1Turn = !this.isPlayer1Turn;
+            console.log("turnStage = buy y tunro otro jugador")
             this.turnStage = "buy";
           }
           break;
@@ -403,6 +410,7 @@ class TankWarsScene extends Phaser.Scene {
       // }
     }
   }
+
 
   updateLegend() {
     this.hpIndicator.setText(`hp: ${Math.round(this.localPlayerHealth)}`);
@@ -433,6 +441,7 @@ class TankWarsScene extends Phaser.Scene {
       this.openStore();
     }
   }
+
   makeEnemyShoot(data) {
     console.log("HERE");
     this.enemyTurretAngle = data.angle;
@@ -482,14 +491,6 @@ class TankWarsScene extends Phaser.Scene {
     if (player === this.localPlayer) {
       this.updateLegend();
     }
-  }
-
-  openStore() {
-    console.log("Store opened");
-  }
-
-  closeStore() {
-    console.log("Store closed");
   }
 
   updateMoveGuide(pointer) {
@@ -683,7 +684,7 @@ class TankWarsScene extends Phaser.Scene {
           );
           this.showDamage(player, damage);
           if (this.localPlayerHealth <= 0) {
-            this.endGame("enemyPlayer");
+            this.endGame("Enemy Player");
           }
         } else if (player === this.enemyPlayer) {
           this.enemyPlayerHealth = Math.max(0, this.enemyPlayerHealth - damage);
@@ -695,7 +696,7 @@ class TankWarsScene extends Phaser.Scene {
           );
           this.showDamage(player, damage);
           if (this.enemyPlayerHealth <= 0) {
-            this.endGame("Player 1");
+            this.endGame("YOU");
           }
         }
       }
@@ -723,7 +724,7 @@ class TankWarsScene extends Phaser.Scene {
           this.localPlayerHealth
         );
         this.showDamage(this.localPlayer, damage);
-        this.endGame("enemyPlayer");
+        this.endGame("Enemy Player");
       }
     } else if (playerKey === "enemyPlayer") {
       this.explosionEffect(this.enemyPlayer.x, this.enemyPlayer.y);
@@ -738,14 +739,17 @@ class TankWarsScene extends Phaser.Scene {
           this.enemyPlayerHealth
         );
         this.showDamage(this.enemyPlayer, damage);
-        this.endGame("localPlayer");
+        this.endGame("YOU");
       }
     }
   }
 
   endGame(winner) {
-    this.gameOver = true;
-    console.log(`${winner} wins!`);
+    window.dispatchEvent(new CustomEvent('winner', { detail: winner }));
+    setTimeout(() => {
+      this.gameOver = true;
+      console.log(`${winner} wins!`);
+    }, 2000);
     // Lógica adicional para finalizar el juego, mostrar mensajes, reiniciar, etc.
   }
 }
