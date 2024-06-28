@@ -55,12 +55,19 @@ class TankWarsScene extends Phaser.Scene {
     this.load.image("tank", "../src/assets/TankBody.png");
     this.load.image("turret", "../src/assets/TankTurret.png");
     this.load.image("bullet", "../src/assets/TankBullet.png");
+    this.load.image("background", "../src/assets/game_background.jpg");
   }
 
   create() {
     console.log("game created");
     // socket config for game duration
     console.log("store open:", this.isOpen);
+
+    const bg = this.add.image(0, 0, 'background');
+    bg.setOrigin(0, 0);
+
+    bg.displayWidth = this.sys.game.config.width;
+    bg.displayHeight = this.sys.game.config.height;
 
     // titulo de la partida
     this.add.text(20, 20, `Partida: ${this.gameName}`, { fill: "#0f0" });
@@ -183,6 +190,12 @@ class TankWarsScene extends Phaser.Scene {
       "turret"
     );
     this.enemyTurret.setOrigin(0.5, 0.5);
+
+    if (this.isPlayer1) {
+      this.enemyTurret.setFlipX(true);
+    } else {
+      this.localTurret.setFlipX(true);
+    }
 
     this.localHealthBar = this.add.graphics();
     //console.log('Player 1 Health:', this.healthPlayer1);
