@@ -1,10 +1,8 @@
-import { React, useState, useContext } from "react";
-import playButton from "../components/playButton";
-import standardButton from "../components/standardButton";
-import "./Home.css";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../auth/AuthContext";
+import "./Home.css";
 
 function Home() {
   const { userId, setPlayerId } = useContext(AuthContext);
@@ -13,14 +11,9 @@ function Home() {
   const [createButtonClicked, setCreateButtonClicked] = useState(false);
   const [joinButtonClicked, setJoinButtonClicked] = useState(false);
 
-  const [createPrivateButtonClicked, setCreatePrivateButtonClicked] =
-    useState(false);
-
-  const [createPublicButtonClicked, setCreatePublicButtonClicked] =
-    useState(false);
-
-  const [joinPrivateButtonClicked, setJoinPrivateButtonClicked] =
-    useState(false);
+  const [createPrivateButtonClicked, setCreatePrivateButtonClicked] = useState(false);
+  const [createPublicButtonClicked, setCreatePublicButtonClicked] = useState(false);
+  const [joinPrivateButtonClicked, setJoinPrivateButtonClicked] = useState(false);
 
   const [gameInfo, setGameInfo] = useState({
     name: "",
@@ -28,10 +21,6 @@ function Home() {
   });
 
   const navigate = useNavigate();
-
-  const handleClick = () => {
-    alert("Button Clicked!");
-  };
 
   const handlePlayClick = () => {
     setPlayButtonClicked((prev) => !prev);
@@ -76,17 +65,15 @@ function Home() {
 
   const createPublicGame = () => {
     console.log("Creating public game");
-    // llamar a la api endpoint create-public-game
     let gameId;
     axios.post("http://localhost:3000/create-game", gameInfo).then((res) => {
       gameId = res.data.id;
-      joinGame(null, gameId, true, false); // join the game `gameId` as host
+      joinGame(null, gameId, true, false);
     });
   };
 
   const createPrivateGame = () => {
     console.log("Creating private game");
-    // llamar a la api endpoint create-private-game
     const code = gameInfo.joinCode;
     let gameId;
     axios
@@ -106,17 +93,11 @@ function Home() {
           return;
         }
         gameId = res.data.id;
-        joinGame(code, gameId, true, true); // join the game `gameId` as host
-        // redirect(`/lobby/${gameId}`);
+        joinGame(code, gameId, true, true);
       });
   };
 
-  const joinGame = (
-    code = null,
-    gameId = null,
-    isHost = false,
-    isPrivate = false
-  ) => {
+  const joinGame = (code = null, gameId = null, isHost = false, isPrivate = false) => {
     console.log("joining to: ", gameId, " as host: ", isHost);
     axios
       .post("http://localhost:3000/join-game", {
@@ -149,30 +130,30 @@ function Home() {
           !createPrivateButtonClicked &&
           !createPublicButtonClicked &&
           !joinPrivateButtonClicked && (
-            <Link onClick={handlePlayClick}>Start Game</Link>
+            <button className="play-button" onClick={handlePlayClick}>Start Game</button>
           )}
 
         {playButtonClicked && (
           <div className="buttons-container">
-            <Link onClick={handleCreateClick}>Create Game</Link>
-            <Link onClick={handleJoinClick}>Join Game</Link>
-            <Link onClick={handlePlayClick}>Back</Link>
+            <button className="play-button" onClick={handleCreateClick}>Create Game</button>
+            <button className="play-button" onClick={handleJoinClick}>Join Game</button>
+            <button className="play-button" onClick={handlePlayClick}>Back</button>
           </div>
         )}
 
         {createButtonClicked && (
           <div className="buttons-container">
-            <Link onClick={handleCreatePublicClick}>Create Public Game</Link>
-            <Link onClick={handleCreatePrivateClick}>Create Private Game</Link>
-            <Link onClick={handleCreateClick}>Back</Link>
+            <button className="play-button" onClick={handleCreatePublicClick}>Create Public Game</button>
+            <button className="play-button" onClick={handleCreatePrivateClick}>Create Private Game</button>
+            <button className="play-button" onClick={handleCreateClick}>Back</button>
           </div>
         )}
 
         {joinButtonClicked && (
           <div className="buttons-container">
-            <Link onClick={(e) => joinGame()}>Join Public Game</Link>
-            <Link onClick={handlePrivateJoin}>Join Private Game</Link>
-            <Link onClick={handleJoinClick}>Back</Link>
+            <button className="play-button" onClick={() => joinGame()}>Join Public Game</button>
+            <button className="play-button" onClick={handlePrivateJoin}>Join Private Game</button>
+            <button className="play-button" onClick={handleJoinClick}>Back</button>
           </div>
         )}
 
@@ -192,12 +173,10 @@ function Home() {
                 }}
               />
             </form>
-            <Link
-              onClick={(e) => joinGame(gameInfo.joinCode, null, false, true)}
-            >
+            <button className="play-button" onClick={() => joinGame(gameInfo.joinCode, null, false, true)}>
               Join Private Game
-            </Link>
-            <Link onClick={handlePrivateJoin}>Back</Link>
+            </button>
+            <button className="play-button" onClick={handlePrivateJoin}>Back</button>
           </div>
         )}
 
@@ -229,8 +208,8 @@ function Home() {
                 }}
               />
             </form>
-            <Link onClick={createPrivateGame}>Create Private Game</Link>
-            <Link onClick={handleCreatePrivateClick}>Back</Link>
+            <button className="play-button" onClick={createPrivateGame}>Create Private Game</button>
+            <button className="play-button" onClick={handleCreatePrivateClick}>Back</button>
           </div>
         )}
 
@@ -250,8 +229,8 @@ function Home() {
                 }}
               />
             </form>
-            <Link onClick={createPublicGame}>Create Public Game</Link>
-            <Link onClick={handleCreatePublicClick}>Back</Link>
+            <button className="play-button" onClick={createPublicGame}>Create Public Game</button>
+            <button className="play-button" onClick={handleCreatePublicClick}>Back</button>
           </div>
         )}
       </div>
