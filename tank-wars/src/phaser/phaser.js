@@ -193,6 +193,17 @@ class TankWarsScene extends Phaser.Scene {
     //this.updateHealthBar(this.player1HealthBar, this.player1, this.healthPlayer1);
     //this.updateHealthBar(this.player2HealthBar, this.player2, this.healthPlayer2);
 
+    window.addEventListener('store-closed', () => {
+      this.isStoreOpen = false;
+      console.log("turnStage = move")
+      this.turnStage = "move";
+    });
+
+    window.addEventListener('store-opened', () => {
+      this.isStoreOpen = true;
+      //this.turnStage = "move";
+    });
+
     //console.log('Player 1 Health:', this.healthPlayer1);
 
     // Add a circle graphics for the move guide
@@ -240,12 +251,20 @@ class TankWarsScene extends Phaser.Scene {
       (!this.isPlayer1Turn && !this.isPlayer1)
     ) {
       console.log("your turn in stage", this.turnStage);
+      window.dispatchEvent(new CustomEvent('turnStageChanged', { detail: this.turnStage }));
+
       switch (this.turnStage) {
         case "buy":
-          // this.handleBuyStage();
-          this.turnStage = "move";
-          break;
+          //this.input.on("pointermove", null, this);
+          if (this.isOpen) {
+            //console.log("store is opened, buy stage confirmed")
+            this.input.keyboard.enabled = false;
+          } else {
+            this.input.keyboard.enable = true
+          }
+          
         case "move":
+          this.input.keyboard.enabled = true;
           this.input.on("pointermove", this.updateMoveGuide, this);
           if (this.input.activePointer.isDown) {
             console.log("pointer down");
@@ -271,6 +290,7 @@ class TankWarsScene extends Phaser.Scene {
                   y: y, // la nueva posicion y de local player
                 });
               }, 500);
+              console.log("turnStage = shoot")
               this.turnStage = "shoot";
             }
           }
@@ -294,6 +314,7 @@ class TankWarsScene extends Phaser.Scene {
             );
             this.lastFired = time + 500;
             this.isPlayer1Turn = !this.isPlayer1Turn;
+            console.log("turnStage = buy y tunro otro jugador")
             this.turnStage = "buy";
           }
           break;
@@ -314,16 +335,6 @@ class TankWarsScene extends Phaser.Scene {
     }
   }
 
-  handleBuyStage() {
-    // Disable movement and shooting while buying
-    this.input.keyboard.enabled = false;
-    this.input.on("pointerdown", this.purchaseItem, this);
-
-    // Ensure the store opens only once and remains open until purchase is complete
-    if (this.isOpen) {
-      return;
-    }
-  }
   makeEnemyShoot(data) {
     console.log("HERE");
     this.enemyTurretAngle = data.angle;

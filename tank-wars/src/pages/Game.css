@@ -36,6 +36,11 @@
   background-color: #218838;
 }
 
+.open-store-button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
 .hidden {
   display: none; /* Hide the element */
 }
