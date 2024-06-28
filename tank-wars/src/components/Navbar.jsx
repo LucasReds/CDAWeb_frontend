@@ -33,11 +33,6 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
             <StandardButton>Rules</StandardButton>
           </Link>
         </li>
-        <li>
-          <Link to="/api-test">
-            <StandardButton>API test</StandardButton>
-          </Link>
-        </li>
         {userId && userId !== "null" ? (
           <>
             <li>
