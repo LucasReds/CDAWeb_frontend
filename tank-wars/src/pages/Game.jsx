@@ -24,13 +24,11 @@ const Game = () => {
       <header className="App-header">
         {/* Header content can go here */}
       </header>
-      <div className="game-wrapper">
-        {isStoreOpen && <Store isOpen={isStoreOpen} onClose={closeStore} />}
-        <div className="game-container">
-          <PhaserGame isStoreOpen={isStoreOpen} openStore={openStore} closeStore={closeStore} />
-          <button className="open-store-button" onClick={openStore}>Open Store</button>
-        </div>
+      {isStoreOpen && <Store isOpen={isStoreOpen} onClose={closeStore} />}
+      <div className="game-container" style={{ display: isStoreOpen ? 'none' : 'block' }}>
+        <PhaserGame />
       </div>
+      <button className="open-store-button" onClick={openStore}>Open Store</button>
     </div>
   );
 };

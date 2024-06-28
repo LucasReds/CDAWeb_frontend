@@ -211,13 +211,6 @@ class TankWarsScene extends Phaser.Scene {
       return;
     }
 
-    if (this.isOpen) {
-      console.log("store open");
-      this.closeStore();
-    } else {
-      //console.log("store closed");
-    }
-
     // if (this.isPlayer1Turn && this.host) {
     //   this.scene.pause();
     // }
@@ -241,12 +234,6 @@ class TankWarsScene extends Phaser.Scene {
       this.enemyPlayer,
       this.enemyPlayerHealth
     );
-
-    if (this.isOpen) {
-      //this.openStore();
-    } else {
-      //this.closeStore();
-    }
 
     if (
       (this.isPlayer1Turn && this.isPlayer1) ||
@@ -336,11 +323,6 @@ class TankWarsScene extends Phaser.Scene {
     if (this.isOpen) {
       return;
     }
-
-    // Need UI?
-    if (!this.isOpen) {
-      this.openStore();
-    }
   }
   makeEnemyShoot(data) {
     console.log("HERE");
@@ -382,14 +364,6 @@ class TankWarsScene extends Phaser.Scene {
       lostHealthWidth,
       healthBarHeight
     );
-  }
-
-  openStore() {
-    console.log("Store opened");
-  }
-
-  closeStore() {
-    console.log("Store closed");
   }
 
   updateMoveGuide(pointer) {
