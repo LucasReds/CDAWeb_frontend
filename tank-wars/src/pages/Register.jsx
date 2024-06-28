@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Home.css';
 import { Link } from "react-router-dom";
@@ -9,12 +9,22 @@ function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [msg, setMsg] = useState("");
+  const [requirements, setRequirements] = useState({
+    minLength: false,
+    hasCapitalLetter: false,
+    hasNonLetter: false,
+  });
+
+  useEffect(() => {
+    setRequirements({
+      minLength: /.{8,}/.test(password),
+      hasCapitalLetter: /[A-Z]/.test(password),
+      hasNonLetter: /[^a-zA-Z]/.test(password),
+    });
+  }, [password]);
 
   const validatePassword = (password) => {
-    const minLength = /.{8,}/;
-    const hasCapitalLetter = /[A-Z]/;
-    const hasNonLetter = /[^a-zA-Z]/;
-    return minLength.test(password) && hasCapitalLetter.test(password) && hasNonLetter.test(password);
+    return requirements.minLength && requirements.hasCapitalLetter && requirements.hasNonLetter;
   };
 
   const handleSubmit = async (event) => {
@@ -23,7 +33,6 @@ function Register() {
     if (!validatePassword(password)) {
       setError(true);
       setMsg("La contraseña debe tener al menos 8 caracteres, una letra mayúscula y un carácter no alfabético.");
-      console.log("La contraseña debe tener al menos 8 caracteres, una letra mayúscula y un carácter no alfabético.")
       return;
     }
 
@@ -68,6 +77,19 @@ function Register() {
                 required
             />
             </label>
+            <div className="password-checklist">
+              <ul>
+                <li className={requirements.minLength ? "valid" : "invalid"}>
+                  Al menos 8 caracteres
+                </li>
+                <li className={requirements.hasCapitalLetter ? "valid" : "invalid"}>
+                  Al menos una letra mayúscula
+                </li>
+                <li className={requirements.hasNonLetter ? "valid" : "invalid"}>
+                  Al menos un carácter no alfabético
+                </li>
+              </ul>
+            </div>
             <div className='sep'>
                 <StandardButton type="submit" value="Enviar">Enviar</StandardButton>
             </div>
@@ -78,4 +100,5 @@ function Register() {
 }
 
 export default Register;
+
 
