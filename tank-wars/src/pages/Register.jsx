@@ -10,9 +10,22 @@ function Register() {
   const [error, setError] = useState(false);
   const [msg, setMsg] = useState("");
 
+  const validatePassword = (password) => {
+    const minLength = /.{8,}/;
+    const hasCapitalLetter = /[A-Z]/;
+    const hasNonLetter = /[^a-zA-Z]/;
+    return minLength.test(password) && hasCapitalLetter.test(password) && hasNonLetter.test(password);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!validatePassword(password)) {
+      setError(true);
+      setMsg("La contraseña debe tener al menos 8 caracteres, una letra mayúscula y un carácter no alfabético.");
+      console.log("La contraseña debe tener al menos 8 caracteres, una letra mayúscula y un carácter no alfabético.")
+      return;
+    }
 
     axios.post(`http://localhost:3000/signup`, {
         username: username,
@@ -31,9 +44,8 @@ function Register() {
     <div className='textoBajoNav'>
         <h1 className='centered-text sub-title'>Registro</h1>
         <div className="Login">
-        {msg.length > 0 && <div className="successMsg"> {msg} </div>}
-
-        {error && <div className="error">Hubo un error con el Registro, por favor trata nuevamente.</div>}
+        {msg.length > 0 && error && <div className="error"> {msg} </div>}
+        {msg.length > 0 && !error && <div className="successMsg"> {msg} </div>}
 
         <form onSubmit={handleSubmit}>
             <label>
@@ -60,9 +72,10 @@ function Register() {
                 <StandardButton type="submit" value="Enviar">Enviar</StandardButton>
             </div>
         </form>
-        </div>
+      </div>
     </div>
   );
 }
 
 export default Register;
+
