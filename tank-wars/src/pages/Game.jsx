@@ -25,7 +25,7 @@ const Game = () => {
         {/* Header content can go here */}
       </header>
       {isStoreOpen && <Store isOpen={isStoreOpen} onClose={closeStore} />}
-      <div className="game-container" style={{ display: isStoreOpen ? 'none' : 'block' }}>
+      <div className={`game-container ${isStoreOpen ? 'hidden' : ''}`}>
         <PhaserGame />
       </div>
       <button className="open-store-button" onClick={openStore}>Open Store</button>
