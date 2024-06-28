@@ -5,8 +5,6 @@ import { AuthContext } from "../auth/AuthContext";
 import axios from "axios";
 import { socket } from "../socket";
 
-
-
 export default function PhaserGame(store) {
   const { isStoreOpen, openStore, closeStore } = store;
   const gameRef = useRef(null);
@@ -17,6 +15,32 @@ export default function PhaserGame(store) {
   const [gameInitData, setGameInitData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  async function registerNewPosition(player, gameId, x, y) {
+    const response = await axios.put("http://localhost:3000/move", {
+      partidaId: gameId,
+      playerId: player,
+      newPosition: {
+        x: x,
+        y: y,
+      },
+    });
+
+    if (response.data.message === "Not enough gas!") {
+      return { result: false, newGas: null, message: response.data.message };
+    } else if (response.data.message === "Move stage completed") {
+      return {
+        result: true,
+        newGas: response.data.newGas,
+        message: response.data.message,
+      };
+    } else {
+      return {
+        result: false,
+        newGas: null,
+        message: "error during move stage",
+      };
+    }
+  }
 
   useEffect(() => {
     // -----------------------------------------
@@ -85,6 +109,7 @@ export default function PhaserGame(store) {
           isStoreOpen: isStoreOpen,
           openStore: openStore,
           closeStore: closeStore,
+          registerNewPosition: registerNewPosition,
         }),
       };
 

@@ -15,6 +15,7 @@ class TankWarsScene extends Phaser.Scene {
     this.isOpen = gameParams.isStoreOpen;
     this.openStore = gameParams.openStore;
     this.closeStore = gameParams.closeStore;
+    this.registerNewPosition = gameParams.registerNewPosition; // usar para cambiar posicion en la bdd.
     // game generic attributes
     this.gameOver = false;
     this.score = 0;
@@ -42,7 +43,12 @@ class TankWarsScene extends Phaser.Scene {
     this.explosionRadius = 50;
     this.maxDamage = 20;
     this.explosionDuration = 1000;
+    this.localFuel = 1000;
+    this.power = 12;
+    this.enemyPower = 12;
+
     this.turnStage = "buy"; // Possible values: 'buy', 'move', 'shoot'
+    this.gettingData = false;
   }
 
   preload() {
@@ -209,15 +215,45 @@ class TankWarsScene extends Phaser.Scene {
     // Add a circle graphics for the move guide
     this.moveGuide = this.add.graphics();
 
+    // Add stats legend text
+    this.hpIndicator = this.add.text(20, 60, `hp: ${this.localPlayerHealth}`, {
+      fill: "#0f0",
+    });
+    this.fuelIndicator = this.add.text(
+      20,
+      80,
+      `current fuel: ${this.localFuel}`,
+      { fill: "#0f0" }
+    );
+    this.angleIndicator = this.add.text(
+      20,
+      100,
+      `angle: ${this.localTurretAngle}`,
+      { fill: "#0f0" }
+    );
+    this.powerIndicator = this.add.text(
+      20,
+      120,
+      `power: ${Math.round(((this.power - 5) / 30) * 100)}`,
+      {
+        fill: "#0f0",
+      }
+    );
+
     this.socket.on("enemy-move-shoot", (data) => {
       this.makeEnemyShoot(data);
     });
     this.socket.on("enemy-move", (data) => {
       this.makeEnemyMove(data);
     });
+    this.socket.on("enemy-rotate-turret", (data) => {
+      console.log(data);
+      this.enemyTurretAngle = data.angle;
+    });
   }
 
   update(time, delta) {
+    if (this.gettingData) return;
     if (this.gameOver) {
       return;
     }
@@ -228,11 +264,11 @@ class TankWarsScene extends Phaser.Scene {
     //console.log('Player 1 Health:', this.healthPlayer1);
 
     this.localTurret.x = this.localPlayer.x;
-    this.localTurret.y = this.localPlayer.y - 10;
+    this.localTurret.y = this.localPlayer.y - 20;
     this.localTurret.rotation = this.localTurretAngle;
 
     this.enemyTurret.x = this.enemyPlayer.x;
-    this.enemyTurret.y = this.enemyPlayer.y - 10;
+    this.enemyTurret.y = this.enemyPlayer.y - 20;
     this.enemyTurret.rotation = this.enemyTurretAngle;
 
     this.updateHealthBar(
@@ -273,44 +309,84 @@ class TankWarsScene extends Phaser.Scene {
             const y = this.input.activePointer.y;
 
             if (this.isValidMove(x, y)) {
-              // let targetPlayer;
-              // if ((this.isPlayer1Turn && this.isPlayer1) || (!this.isPlayer1Turn && !this.isPlayer1)) {
-              //     targetPlayer = this.localPlayer;
-              // } else {
-              //     targetPlayer = this.enemyPlayer;
-              // }
-              const targetPlayer = "local"; // siempre se mueve el local en esa parte
-              this.movePlayerTo(targetPlayer, x, y);
+              // this.gettingData = true;
+              this.registerNewPosition(
+                this.local_player_id,
+                this.partida_id,
+                x,
+                y
+              ).then((checkingFuel) => {
+                console.log("checking fuel", checkingFuel);
+                if (checkingFuel.result) {
+                  this.localFuel = checkingFuel.newGas;
+                  this.updateLegend();
+                  const targetPlayer = "local"; // siempre se mueve el local en esa parte
+                  this.movePlayerTo(targetPlayer, x, y);
 
-              setTimeout(() => {
-                this.socket.emit("make-move", {
-                  partida_id: this.partida_id,
-                  player_id: this.local_player_id,
-                  x: x, // la nueva posicion x de local player
-                  y: y, // la nueva posicion y de local player
-                });
-              }, 500);
-              console.log("turnStage = shoot")
-              this.turnStage = "shoot";
+                  setTimeout(() => {
+                    this.socket.emit("make-move", {
+                      partida_id: this.partida_id,
+                      player_id: this.local_player_id,
+                      x: x, // la nueva posicion x de local player
+                      y: y, // la nueva posicion y de local player
+                    });
+                  }, 500);
+                  this.turnStage = "shoot";
+                } else if (
+                  !checkingFuel.result &&
+                  checkingFuel.message === "Not enough gas!"
+                ) {
+                  console.log("Not enough gas!");
+                  this.fuelWarning = this.add.text(
+                    20,
+                    160,
+                    checkingFuel.message,
+                    { fill: "#0f0" }
+                  );
+                }
+              });
+              // this.gettingData = false
             }
           }
           break;
         case "shoot":
+          if (this.cursors.left.isDown) {
+            this.power = this.power - 0.2 > 5 ? this.power - 0.2 : 5;
+            this.updateLegend();
+          }
+
+          if (this.cursors.right.isDown) {
+            this.power = this.power + 0.2 < 35 ? this.power + 0.2 : 35;
+            this.updateLegend();
+          }
+
           if (this.cursors.up.isDown) {
             this.localTurretAngle -= 0.05;
+            this.updateLegend();
+            this.socket.emit("rotate-turret", {
+              partida_id: this.partida_id,
+              angle: this.localTurretAngle,
+            });
           } else if (this.cursors.down.isDown) {
             this.localTurretAngle += 0.05;
+            this.updateLegend();
+            this.socket.emit("rotate-turret", {
+              partida_id: this.partida_id,
+              angle: this.localTurretAngle,
+            });
           }
           if (this.fireButton.isDown && time > this.lastFired) {
             this.socket.emit("make-move-shoot", {
               partida_id: this.partida_id,
               player_id: this.local_player_id,
               angle: this.localTurretAngle,
+              power: this.power,
             });
             this.fireBullet(
               this.localPlayer,
               this.localTurret,
-              this.localTurretAngle
+              this.localTurretAngle,
+              this.power
             );
             this.lastFired = time + 500;
             this.isPlayer1Turn = !this.isPlayer1Turn;
@@ -335,9 +411,41 @@ class TankWarsScene extends Phaser.Scene {
     }
   }
 
+
+  updateLegend() {
+    this.hpIndicator.setText(`hp: ${Math.round(this.localPlayerHealth)}`);
+    this.fuelIndicator.setText(`current fuel: ${this.localFuel}`);
+    this.angleIndicator.setText(
+      `angle: ${Math.round(this.localTurretAngle * 100)}`
+    );
+    this.powerIndicator.setText(
+      `power: ${Math.round(((this.power - 5) / 30) * 100)}%`
+    );
+    if (this.fuelWarning) {
+      this.fuelWarning.destroy();
+    }
+  }
+
+  handleBuyStage() {
+    // Disable movement and shooting while buying
+    this.input.keyboard.enabled = false;
+    this.input.on("pointerdown", this.purchaseItem, this);
+
+    // Ensure the store opens only once and remains open until purchase is complete
+    if (this.isOpen) {
+      return;
+    }
+
+    // Need UI?
+    if (!this.isOpen) {
+      this.openStore();
+    }
+  }
+
   makeEnemyShoot(data) {
     console.log("HERE");
     this.enemyTurretAngle = data.angle;
+    this.enemyPower = data.power;
     console.log("firing bullet");
     console.log(
       "enemy player loca data",
@@ -345,7 +453,12 @@ class TankWarsScene extends Phaser.Scene {
       this.enemyTurret,
       this.enemyTurretAngle
     );
-    this.fireBullet(this.enemyPlayer, this.enemyTurret, this.enemyTurretAngle);
+    this.fireBullet(
+      this.enemyPlayer,
+      this.enemyTurret,
+      this.enemyTurretAngle,
+      this.enemyPower
+    );
     this.isPlayer1Turn = !this.isPlayer1Turn;
   }
   makeEnemyMove(data) {
@@ -375,6 +488,9 @@ class TankWarsScene extends Phaser.Scene {
       lostHealthWidth,
       healthBarHeight
     );
+    if (player === this.localPlayer) {
+      this.updateLegend();
+    }
   }
 
   updateMoveGuide(pointer) {
@@ -447,16 +563,16 @@ class TankWarsScene extends Phaser.Scene {
       onComplete: () => {
         if (target === this.localPlayer) {
           this.localTurret.x = player.x;
-          this.localTurret.y = player.y - 10;
+          this.localTurret.y = player.y - 20;
         } else {
           this.enemyTurret.x = player.x;
-          this.enemyTurret.y = player.y - 10;
+          this.enemyTurret.y = player.y - 20;
         }
       },
     });
   }
 
-  fireBullet(player, turret, turretAngle) {
+  fireBullet(player, turret, turretAngle, power) {
     console.log(
       "fireBullet called. Player:",
       player,
@@ -470,14 +586,14 @@ class TankWarsScene extends Phaser.Scene {
 
     if (bullet) {
       let angle = turretAngle;
-      let velocity = 15;
+      let velocity = power;
 
       // Si el jugador es player2, invertimos el ángulo y la velocidad para disparar hacia la izquierda
       if (
         (player === this.localPlayer && !this.isPlayer1) ||
         (player === this.enemyPlayer && this.isPlayer1)
       ) {
-        angle = Phaser.Math.DegToRad(180) + turretAngle; // Invierte el ángulo
+        // angle = Phaser.Math.DegToRad(180) + turretAngle; // Invierte el ángulo
       }
       console.log("Bullet will be fired. Angle:", angle, "Velocity:", velocity);
       bullet.fire(turret.x, turret.y, angle, velocity);
@@ -531,6 +647,25 @@ class TankWarsScene extends Phaser.Scene {
     this.applyExplosionDamage(x, y, this.explosionRadius, this.maxDamage);
   }
 
+  showDamage(player, damage) {
+    this.damageTag = this.add.text(
+      player.x,
+      player.y - 50,
+      `-${Math.round(damage)}`,
+      {
+        fill: "#f00",
+      }
+    );
+    this.time.delayedCall(
+      1000,
+      () => {
+        this.damageTag.destroy();
+      },
+      [],
+      this
+    );
+  }
+
   /* Chat */
 
   applyExplosionDamage(x, y, radius, maxDamage) {
@@ -547,6 +682,7 @@ class TankWarsScene extends Phaser.Scene {
             this.localPlayer,
             this.localPlayerHealth
           );
+          this.showDamage(player, damage);
           if (this.localPlayerHealth <= 0) {
             this.endGame("Enemy Player");
           }
@@ -558,6 +694,7 @@ class TankWarsScene extends Phaser.Scene {
             this.enemyPlayer,
             this.enemyPlayerHealth
           );
+          this.showDamage(player, damage);
           if (this.enemyPlayerHealth <= 0) {
             this.endGame("YOU");
           }
@@ -573,6 +710,7 @@ class TankWarsScene extends Phaser.Scene {
 
   handleTankHit(tank, playerKey, health) {
     if (playerKey === "localPlayer") {
+      this.explosionEffect(this.localPlayer.x, this.localPlayer.y);
       //console.log('Before collision - Player 1 Health:', this.player1Health);
       //this.player1Health -= 10;
       health = Math.max(0, health - 20);
@@ -585,9 +723,11 @@ class TankWarsScene extends Phaser.Scene {
           this.localPlayer,
           this.localPlayerHealth
         );
+        this.showDamage(this.localPlayer, damage);
         this.endGame("Enemy Player");
       }
     } else if (playerKey === "enemyPlayer") {
+      this.explosionEffect(this.enemyPlayer.x, this.enemyPlayer.y);
       health = Math.max(0, health - 20);
       this.enemyPlayerHealth = health;
       //this.updateHealthBar(this.player1HealthBar, this.player1, this.enemyPlayerHealth);
@@ -598,6 +738,7 @@ class TankWarsScene extends Phaser.Scene {
           this.enemyPlayer,
           this.enemyPlayerHealth
         );
+        this.showDamage(this.enemyPlayer, damage);
         this.endGame("YOU");
       }
     }
