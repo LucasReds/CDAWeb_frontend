@@ -548,7 +548,7 @@ class TankWarsScene extends Phaser.Scene {
             this.localPlayerHealth
           );
           if (this.localPlayerHealth <= 0) {
-            this.endGame("enemyPlayer");
+            this.endGame("Enemy Player");
           }
         } else if (player === this.enemyPlayer) {
           this.enemyPlayerHealth = Math.max(0, this.enemyPlayerHealth - damage);
@@ -559,7 +559,7 @@ class TankWarsScene extends Phaser.Scene {
             this.enemyPlayerHealth
           );
           if (this.enemyPlayerHealth <= 0) {
-            this.endGame("Player 1");
+            this.endGame("YOU");
           }
         }
       }
@@ -585,7 +585,7 @@ class TankWarsScene extends Phaser.Scene {
           this.localPlayer,
           this.localPlayerHealth
         );
-        this.endGame("enemyPlayer");
+        this.endGame("Enemy Player");
       }
     } else if (playerKey === "enemyPlayer") {
       health = Math.max(0, health - 20);
@@ -598,14 +598,17 @@ class TankWarsScene extends Phaser.Scene {
           this.enemyPlayer,
           this.enemyPlayerHealth
         );
-        this.endGame("localPlayer");
+        this.endGame("YOU");
       }
     }
   }
 
   endGame(winner) {
-    this.gameOver = true;
-    console.log(`${winner} wins!`);
+    window.dispatchEvent(new CustomEvent('winner', { detail: winner }));
+    setTimeout(() => {
+      this.gameOver = true;
+      console.log(`${winner} wins!`);
+    }, 2000);
     // Lógica adicional para finalizar el juego, mostrar mensajes, reiniciar, etc.
   }
 }

@@ -5,10 +5,13 @@ import { AuthContext } from "../auth/AuthContext";
 import axios from "axios";
 import Store from "../components/store";
 import './Game.css'; // Make sure to import your CSS file
+import WinnerDisplay from "../components/winnerDisplay";
 
 const Game = () => {
   const [isStoreOpen, setIsStoreOpen] = useState(false);
-  const [turnStage, setTurnStage] = useState("null")
+  const [turnStage, setTurnStage] = useState("null");
+  const [showWinner, setShowWinner] = useState(false);
+  const [winner, setWinner] = useState("");
 
   const openStore = () => {
     console.log("Store opened");
@@ -22,18 +25,30 @@ const Game = () => {
     window.dispatchEvent(new Event('store-closed'));
   };
 
+
   useEffect(() => {
     const handleTurnStageChange = (event) => {
       setTurnStage(event.detail);
       //console.log(event.detail)
     };
 
+    const handleWinner = (event) => {
+      setWinner(event.detail);
+      setShowWinner(true);
+    }
+
     window.addEventListener('turnStageChanged', handleTurnStageChange);
+    window.addEventListener('winner', handleWinner);
 
     return () => {
       window.removeEventListener('turnStageChanged', handleTurnStageChange);
+      window.removeEventListener('winner', handleWinner);
     };
   }, []);
+
+  const handleClose = () => {
+    setShowWinner(false);
+  };
 
   return (
     <div className="Game">
@@ -41,6 +56,7 @@ const Game = () => {
         {/* Header content can go here */}
       </header>
       {isStoreOpen && <Store isOpen={isStoreOpen} onClose={closeStore} />}
+      <WinnerDisplay show={showWinner} winner={winner} onClose={handleClose} />
       <div className={`game-container ${isStoreOpen ? 'hidden' : ''}`}>
         <PhaserGame />
       </div>
