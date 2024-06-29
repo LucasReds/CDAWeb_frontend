@@ -40,8 +40,8 @@ class TankWarsScene extends Phaser.Scene {
     this.enemyPlayerHealth = 100;
     this.localHealthBar = null;
     this.enemyHealthBar = null;
-    this.explosionRadius = 50;
-    this.maxDamage = 20;
+    this.explosionRadius = 60;
+    this.maxDamage = 50;
     this.explosionDuration = 1000;
     this.localFuel = 1000;
     this.power = 12;
@@ -63,7 +63,7 @@ class TankWarsScene extends Phaser.Scene {
     // socket config for game duration
     console.log("store open:", this.isOpen);
 
-    const bg = this.add.image(0, 0, 'background');
+    const bg = this.add.image(0, 0, "background");
     bg.setOrigin(0, 0);
 
     bg.displayWidth = this.sys.game.config.width;
@@ -212,13 +212,13 @@ class TankWarsScene extends Phaser.Scene {
     //this.updateHealthBar(this.player1HealthBar, this.player1, this.healthPlayer1);
     //this.updateHealthBar(this.player2HealthBar, this.player2, this.healthPlayer2);
 
-    window.addEventListener('store-closed', () => {
+    window.addEventListener("store-closed", () => {
       this.isStoreOpen = false;
-      console.log("turnStage = move")
+      console.log("turnStage = move");
       this.turnStage = "move";
     });
 
-    window.addEventListener('store-opened', () => {
+    window.addEventListener("store-opened", () => {
       this.isStoreOpen = true;
       //this.turnStage = "move";
     });
@@ -230,26 +230,26 @@ class TankWarsScene extends Phaser.Scene {
 
     // Add stats legend text
     this.hpIndicator = this.add.text(20, 60, `hp: ${this.localPlayerHealth}`, {
-      fill: "#0f0",
+      fill: "#016901",
     });
     this.fuelIndicator = this.add.text(
       20,
       80,
       `current fuel: ${this.localFuel}`,
-      { fill: "#0f0" }
+      { fill: "#016901" }
     );
     this.angleIndicator = this.add.text(
       20,
       100,
       `angle: ${this.localTurretAngle}`,
-      { fill: "#0f0" }
+      { fill: "#016901" }
     );
     this.powerIndicator = this.add.text(
       20,
       120,
       `power: ${Math.round(((this.power - 5) / 30) * 100)}`,
       {
-        fill: "#0f0",
+        fill: "#016901",
       }
     );
 
@@ -300,7 +300,9 @@ class TankWarsScene extends Phaser.Scene {
       (!this.isPlayer1Turn && !this.isPlayer1)
     ) {
       console.log("your turn in stage", this.turnStage);
-      window.dispatchEvent(new CustomEvent('turnStageChanged', { detail: this.turnStage }));
+      window.dispatchEvent(
+        new CustomEvent("turnStageChanged", { detail: this.turnStage })
+      );
 
       switch (this.turnStage) {
         case "buy":
@@ -309,9 +311,9 @@ class TankWarsScene extends Phaser.Scene {
             //console.log("store is opened, buy stage confirmed")
             this.input.keyboard.enabled = false;
           } else {
-            this.input.keyboard.enable = true
+            this.input.keyboard.enable = true;
           }
-          
+
         case "move":
           this.input.keyboard.enabled = true;
           this.input.on("pointermove", this.updateMoveGuide, this);
@@ -403,7 +405,7 @@ class TankWarsScene extends Phaser.Scene {
             );
             this.lastFired = time + 500;
             this.isPlayer1Turn = !this.isPlayer1Turn;
-            console.log("turnStage = buy y tunro otro jugador")
+            console.log("turnStage = buy y tunro otro jugador");
             this.turnStage = "buy";
           }
           break;
@@ -423,7 +425,6 @@ class TankWarsScene extends Phaser.Scene {
       // }
     }
   }
-
 
   updateLegend() {
     this.hpIndicator.setText(`hp: ${Math.round(this.localPlayerHealth)}`);
@@ -606,7 +607,7 @@ class TankWarsScene extends Phaser.Scene {
         (player === this.localPlayer && !this.isPlayer1) ||
         (player === this.enemyPlayer && this.isPlayer1)
       ) {
-        // angle = Phaser.Math.DegToRad(180) + turretAngle; // Invierte el ángulo
+        angle = Phaser.Math.DegToRad(180) + turretAngle; // Invierte el ángulo
       }
       console.log("Bullet will be fired. Angle:", angle, "Velocity:", velocity);
       bullet.fire(turret.x, turret.y, angle, velocity);
@@ -758,7 +759,7 @@ class TankWarsScene extends Phaser.Scene {
   }
 
   endGame(winner) {
-    window.dispatchEvent(new CustomEvent('winner', { detail: winner }));
+    window.dispatchEvent(new CustomEvent("winner", { detail: winner }));
     setTimeout(() => {
       this.gameOver = true;
       console.log(`${winner} wins!`);

@@ -11,9 +11,12 @@ function Home() {
   const [createButtonClicked, setCreateButtonClicked] = useState(false);
   const [joinButtonClicked, setJoinButtonClicked] = useState(false);
 
-  const [createPrivateButtonClicked, setCreatePrivateButtonClicked] = useState(false);
-  const [createPublicButtonClicked, setCreatePublicButtonClicked] = useState(false);
-  const [joinPrivateButtonClicked, setJoinPrivateButtonClicked] = useState(false);
+  const [createPrivateButtonClicked, setCreatePrivateButtonClicked] =
+    useState(false);
+  const [createPublicButtonClicked, setCreatePublicButtonClicked] =
+    useState(false);
+  const [joinPrivateButtonClicked, setJoinPrivateButtonClicked] =
+    useState(false);
 
   const [gameInfo, setGameInfo] = useState({
     name: "",
@@ -97,7 +100,12 @@ function Home() {
       });
   };
 
-  const joinGame = (code = null, gameId = null, isHost = false, isPrivate = false) => {
+  const joinGame = (
+    code = null,
+    gameId = null,
+    isHost = false,
+    isPrivate = false
+  ) => {
     console.log("joining to: ", gameId, " as host: ", isHost);
     axios
       .post("http://localhost:3000/join-game", {
@@ -130,30 +138,54 @@ function Home() {
           !createPrivateButtonClicked &&
           !createPublicButtonClicked &&
           !joinPrivateButtonClicked && (
-            <button className="play-button" onClick={handlePlayClick}>Start Game</button>
+            <button className="play-button" onClick={handlePlayClick}>
+              Start Game
+            </button>
           )}
 
         {playButtonClicked && (
           <div className="buttons-container">
-            <button className="play-button" onClick={handleCreateClick}>Create Game</button>
-            <button className="play-button" onClick={handleJoinClick}>Join Game</button>
-            <button className="play-button" onClick={handlePlayClick}>Back</button>
+            {userId && userId !== "null" ? (
+              <button className="play-button" onClick={handleCreateClick}>
+                Create Game
+              </button>
+            ) : (
+              <p>ONLY LOGGED IN USERS CAN CREATE GAMES !</p>
+            )}
+            <button className="play-button" onClick={handleJoinClick}>
+              Join Game
+            </button>
+            <button className="play-button" onClick={handlePlayClick}>
+              Back
+            </button>
           </div>
         )}
 
         {createButtonClicked && (
           <div className="buttons-container">
-            <button className="play-button" onClick={handleCreatePublicClick}>Create Public Game</button>
-            <button className="play-button" onClick={handleCreatePrivateClick}>Create Private Game</button>
-            <button className="play-button" onClick={handleCreateClick}>Back</button>
+            <button className="play-button" onClick={handleCreatePublicClick}>
+              Create Public Game
+            </button>
+            <button className="play-button" onClick={handleCreatePrivateClick}>
+              Create Private Game
+            </button>
+            <button className="play-button" onClick={handleCreateClick}>
+              Back
+            </button>
           </div>
         )}
 
         {joinButtonClicked && (
           <div className="buttons-container">
-            <button className="play-button" onClick={() => joinGame()}>Join Public Game</button>
-            <button className="play-button" onClick={handlePrivateJoin}>Join Private Game</button>
-            <button className="play-button" onClick={handleJoinClick}>Back</button>
+            <button className="play-button" onClick={() => joinGame()}>
+              Join Public Game
+            </button>
+            <button className="play-button" onClick={handlePrivateJoin}>
+              Join Private Game
+            </button>
+            <button className="play-button" onClick={handleJoinClick}>
+              Back
+            </button>
           </div>
         )}
 
@@ -173,10 +205,15 @@ function Home() {
                 }}
               />
             </form>
-            <button className="play-button" onClick={() => joinGame(gameInfo.joinCode, null, false, true)}>
+            <button
+              className="play-button"
+              onClick={() => joinGame(gameInfo.joinCode, null, false, true)}
+            >
               Join Private Game
             </button>
-            <button className="play-button" onClick={handlePrivateJoin}>Back</button>
+            <button className="play-button" onClick={handlePrivateJoin}>
+              Back
+            </button>
           </div>
         )}
 
@@ -208,8 +245,12 @@ function Home() {
                 }}
               />
             </form>
-            <button className="play-button" onClick={createPrivateGame}>Create Private Game</button>
-            <button className="play-button" onClick={handleCreatePrivateClick}>Back</button>
+            <button className="play-button" onClick={createPrivateGame}>
+              Create Private Game
+            </button>
+            <button className="play-button" onClick={handleCreatePrivateClick}>
+              Back
+            </button>
           </div>
         )}
 
@@ -229,8 +270,12 @@ function Home() {
                 }}
               />
             </form>
-            <button className="play-button" onClick={createPublicGame}>Create Public Game</button>
-            <button className="play-button" onClick={handleCreatePublicClick}>Back</button>
+            <button className="play-button" onClick={createPublicGame}>
+              Create Public Game
+            </button>
+            <button className="play-button" onClick={handleCreatePublicClick}>
+              Back
+            </button>
           </div>
         )}
       </div>
