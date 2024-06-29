@@ -24,7 +24,7 @@ export default function Lobby() {
 
   useEffect(() => {
     if (time === 0) {
-      // fetch("http://localhost:3000/update-tank-selection", {
+      // fetch("https://cdaweb-backend.onrender.com/update-tank-selection", {
       //   method: "POST",
       //   body: {
       //     tank_id: selected,
@@ -50,7 +50,7 @@ export default function Lobby() {
     });
 
     // pedir info de los tanques
-    fetch("http://localhost:3000/get-tanks")
+    fetch("https://cdaweb-backend.onrender.com/get-tanks")
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

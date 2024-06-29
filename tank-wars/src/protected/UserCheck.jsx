@@ -13,7 +13,7 @@ const UserCheck = () => {
       console.log('UserCheck with userId:', userId);
       axios({
         method: 'get',
-        url: 'http://localhost:3000/protectedUser',
+        url: 'https://cdaweb-backend.onrender.com/protectedUser',
         headers: {
           'Authorization': `Bearer ${token}`,
           'User-ID': userId // Add User-ID header to send userId

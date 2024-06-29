@@ -17,7 +17,7 @@ const Store = ({ isOpen, onClose }) => {
       //console.log("Store opened");
 
       // Fetch items from the API when the store is opened 
-      axios.get(`http://localhost:3000/getProyectils?playerId=${userId}`)
+      axios.get(`https://cdaweb-backend.onrender.com/getProyectils?playerId=${userId}`)
         .then(response => {
           if (response.data.proyectils) {
             const fetchedItems = response.data.proyectils.map(proyectil => ({
@@ -38,7 +38,7 @@ const Store = ({ isOpen, onClose }) => {
 
     
       // Fetch player's coins from the API
-      axios.get(`http://localhost:3000/getPlayerCoins?playerId=${userId}`)
+      axios.get(`https://cdaweb-backend.onrender.com/getPlayerCoins?playerId=${userId}`)
         .then(response => {
           if (response.data.coins !== undefined) {
             setCoins(response.data.coins);
@@ -68,7 +68,7 @@ const Store = ({ isOpen, onClose }) => {
     }));
 
     // Update server with new balance
-    axios.post('http://localhost:3000/buy', {
+    axios.post('https://cdaweb-backend.onrender.com/buy', {
       playerId: userId,
       boughtItems: [
         item.id

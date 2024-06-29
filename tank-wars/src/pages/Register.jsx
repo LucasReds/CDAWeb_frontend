@@ -36,7 +36,7 @@ function Register() {
       return;
     }
 
-    axios.post(`http://localhost:3000/signup`, {
+    axios.post(`https://cdaweb-backend.onrender.com/signup`, {
         username: username,
         password: password
       }).then((response) => {

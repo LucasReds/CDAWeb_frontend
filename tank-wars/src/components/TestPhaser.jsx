@@ -30,7 +30,7 @@ export default function TestPhaser() {
     // iniciar partida en la api (SOLO HOST HACE CAMBIOS)
     try {
       axios
-        .get("http://localhost:3000/initialize-game", {
+        .get("https://cdaweb-backend.onrender.com/initialize-game", {
           params: {
             userId: userId,
             gameId: game_id,

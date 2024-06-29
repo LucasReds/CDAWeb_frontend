@@ -69,7 +69,7 @@ function Home() {
   const createPublicGame = () => {
     console.log("Creating public game");
     let gameId;
-    axios.post("http://localhost:3000/create-game", gameInfo).then((res) => {
+    axios.post("https://cdaweb-backend.onrender.com/create-game", gameInfo).then((res) => {
       gameId = res.data.id;
       joinGame(null, gameId, true, false);
     });
@@ -80,7 +80,7 @@ function Home() {
     const code = gameInfo.joinCode;
     let gameId;
     axios
-      .post("http://localhost:3000/create-game", {
+      .post("https://cdaweb-backend.onrender.com/create-game", {
         ...gameInfo,
         isPrivate: true,
       })
@@ -108,7 +108,7 @@ function Home() {
   ) => {
     console.log("joining to: ", gameId, " as host: ", isHost);
     axios
-      .post("http://localhost:3000/join-game", {
+      .post("https://cdaweb-backend.onrender.com/join-game", {
         gameId: gameId,
         private: isPrivate,
         isHost: isHost,

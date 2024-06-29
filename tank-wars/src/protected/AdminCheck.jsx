@@ -12,7 +12,7 @@ const AdminCheck = () => {
     console.log(token);
     axios({
       method: 'get',
-      url: `http://localhost:3000/protectedAdmin`,
+      url: `https://cdaweb-backend.onrender.com/protectedAdmin`,
       headers: {
         'Authorization': `Bearer ${token}`
       }
