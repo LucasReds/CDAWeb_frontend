@@ -43,7 +43,7 @@ class TankWarsScene extends Phaser.Scene {
     this.explosionRadius = 60;
     this.maxDamage = 50;
     this.explosionDuration = 1000;
-    this.localFuel = 1000;
+    this.localFuel = 10000;
     this.power = 12;
     this.enemyPower = 12;
 
