@@ -14,6 +14,18 @@
   text-shadow: 4px 4px rgba(195, 73, 226, 0.774);
 }
 
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.game-info-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 auto;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -78,7 +90,7 @@ body {
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
   background-color: #f0faff;
   margin-top: 5%;
 }
@@ -138,22 +150,134 @@ body {
 .textoBajoNav {
   margin-top: 8%;
   text-align: center;
-
 }
-
 
 /* ---- UserCheck PAGE STYLE ---- */
 
 .Perfil {
   margin-top: 8%;
-  padding: "20px"
+  padding: "20px";
 }
 
 .casillas {
   display: flex;
   justify-content: center;
   gap: 20px;
-  font-family: "FFXRNDLT" ;
+  font-family: "FFXRNDLT";
   font-size: larger;
   padding: 2%;
+}
+
+/* New styles for user table */
+
+.title {
+  text-align: center;
+  font-size: 3.5em;
+  font-weight: bold;
+  color: green;
+  text-shadow: 4px 4px rgba(195, 73, 226, 0.774);
+}
+
+.sub-title {
+  text-align: center;
+  font-size: 3em;
+  font-weight: bold;
+  color: green;
+  text-shadow: 4px 4px rgba(195, 73, 226, 0.774);
+}
+
+.Login {
+  width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
+  background-color: #f0faff;
+  margin-top: 5%;
+}
+
+.error {
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  border: 1px solid #ff4d4d;
+  border-radius: 5px;
+  color: #ff4d4d;
+  background-color: #ffe6e6;
+  text-align: center;
+}
+
+.successMsg {
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  border: 1px solid #5cff4d;
+  border-radius: 5px;
+  color: #2aff86;
+  background-color: #e9ffe6;
+  text-align: center;
+}
+
+.textoBajoNav {
+  margin-top: 8%;
+  text-align: center;
+}
+
+.Perfil {
+  margin-top: 8%;
+  padding: 20px;
+  text-align: center;
+}
+
+/* New styles for vertical table */
+
+.vertical-table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-size: 18px;
+  text-align: left;
+}
+
+.vertical-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  background-color: #f0faff;
+}
+
+.vertical-table td:nth-child(1) {
+  background-color: rgba(0, 100, 0, 0.8);
+  color: white;
+  font-weight: bold;
+  text-align: right;
+}
+
+
+.vertical-table tr:hover td {
+  background-color: #cce5ff;
+}
+
+.centered-text {
+  text-align: center;
+  margin-top: 20px;
+  color: green; /* Use green for the centered text */
+  text-shadow: 4px 4px rgba(195, 73, 226, 0.774);
+  font-weight: bold;
+}
+
+.password-checklist ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.password-checklist li {
+  margin: 5px 0;
+}
+
+.password-checklist .valid {
+  color: green;
+}
+
+.password-checklist .invalid {
+  color: red;
 }

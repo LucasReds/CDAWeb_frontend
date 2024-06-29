@@ -1,49 +1,75 @@
-import React, { useEffect, useState , useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../auth/AuthContext';
 import '../pages/Home.css';
 
-/* Código extraído de capsulas */
-
-const UserCheck = () => { 
-  const { token } = useContext(AuthContext)
+const UserCheck = () => {
+  const { token, userId } = useContext(AuthContext); // Retrieve token and userId from context
   const [status, setStatus] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    console.log(token);
-    console.log('UserCheck');
-    axios({
-      method: 'get',
-      url: `http://localhost:3000/protectedUser`,
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
+    if (token && userId) {
+      console.log('UserCheck with userId:', userId);
+      axios({
+        method: 'get',
+        url: 'https://cdaweb-backend.onrender.com/protectedUser',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'User-ID': userId // Add User-ID header to send userId
+        }
+      })
       .then(response => {
-        console.log(response.data.user)
-        console.log('Estas autorizado para estar aquí')
-        setStatus('authorized')
+        console.log(response.data.user);
+        setUserData(response.data.user); // Assuming response contains user data
+        setStatus('authorized');
       })
       .catch(error => {
-        console.log('No estas autorizado para estar aquí')
+        console.log('No estás autorizado para estar aquí');
         setStatus('unauthorized');
       });
-  }, []);
-
+    }
+  }, [token, userId]);
 
   return (
-    /* Queremos las cosas dentro del div se muestren solo si esta autorizado */
     <div className="Perfil">
-      {status === 'authorized' && (
+      {status === 'authorized' && userData && (
         <>
-          <h1>Bienvenido a tu Perfil</h1>
-          <p>Puedes visualizar tus estadísticas aquí:</p>
+          <h1 className="centered-text">Bienvenido a tu Perfil</h1>
+          <table className="vertical-table">
+            <tbody>
+              <tr>
+                <td><strong>ID</strong></td>
+                <td>{userData.id}</td>
+              </tr>
+              <tr>
+                <td><strong>Username</strong></td>
+                <td>{userData.username}</td>
+              </tr>
+              <tr>
+                <td><strong>Money</strong></td>
+                <td>{userData.money}</td>
+              </tr>
+              <tr>
+                <td><strong>Level</strong></td>
+                <td>{userData.level}</td>
+              </tr>
+              <tr>
+                <td><strong>XP</strong></td>
+                <td>{userData.xp}</td>
+              </tr>
+              <tr>
+                <td><strong>Created At</strong></td>
+                <td>{new Date(userData.createdAt).toLocaleString()}</td>
+              </tr>
+            </tbody>
+          </table>
         </>
       )}
       {status !== 'authorized' && (
         <>
-          <h1>No estás autorizado para estar aquí</h1>
-          <p>Por favor, inicia sesión para acceder a tu perfil.</p>
+          <h1 className="centered-text">No estás autorizado para estar aquí</h1>
+          <p className="centered-text">Por favor, inicia sesión para acceder a tu perfil.</p>
         </>
       )}
     </div>
