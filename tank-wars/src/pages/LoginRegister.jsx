@@ -18,7 +18,7 @@ function LoginRegister({ setIsLoggedIn }) {
     event.preventDefault();
 
     axios
-      .post(`http://localhost:3000/login`, {
+      .post(`https://cdaweb-backend.onrender.com/login`, {
         username: username,
         password: password,
       })

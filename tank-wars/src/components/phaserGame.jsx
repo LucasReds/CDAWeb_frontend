@@ -16,7 +16,7 @@ export default function PhaserGame(store) {
   const [loading, setLoading] = useState(true);
 
   async function registerNewPosition(player, gameId, x, y) {
-    const response = await axios.put("http://localhost:3000/move", {
+    const response = await axios.put("https://cdaweb-backend.onrender.com/move", {
       partidaId: gameId,
       playerId: player,
       newPosition: {
@@ -62,7 +62,7 @@ export default function PhaserGame(store) {
     // iniciar partida en la api (SOLO HOST HACE CAMBIOS)
     try {
       axios
-        .get("http://localhost:3000/initialize-game", {
+        .get("https://cdaweb-backend.onrender.com/initialize-game", {
           params: {
             userId: userId,
             gameId: game_id,

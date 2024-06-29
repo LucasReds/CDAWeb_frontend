@@ -77,7 +77,7 @@ export default function ApiTest() {
     setLoading(true);
     try {
       axios
-        .post(`http://localhost:3000${endpoint}`, requestParams)
+        .post(`https://cdaweb-backend.onrender.com${endpoint}`, requestParams)
         .then((res) => {
           console.log(res.data);
           setResponse(res.data);
