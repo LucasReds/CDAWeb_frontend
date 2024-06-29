@@ -52,10 +52,10 @@ class TankWarsScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("tank", "../src/assets/TankBody.png");
-    this.load.image("turret", "../src/assets/TankTurret.png");
-    this.load.image("bullet", "../src/assets/TankBullet.png");
-    this.load.image("background", "../src/assets/game_background.jpg");
+    this.load.image("tank", "../public/TankBody.png");
+    this.load.image("turret", "../public/TankTurret.png");
+    this.load.image("bullet", "../public/TankBullet.png");
+    this.load.image("background", "../public/game_background.jpg");
   }
 
   create() {
