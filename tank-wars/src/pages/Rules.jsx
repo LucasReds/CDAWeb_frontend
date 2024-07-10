@@ -8,7 +8,7 @@ function Rules() {
         <h1>Tank Wars</h1>
       </div>
       <div className="rules-container">
-        <ol className="rules-list">
+        <ul className="rules-list">
           <li>
             <strong>Objective:</strong> Destroy the tanks of your adversaries and be the last one standing!
           </li>
@@ -21,13 +21,18 @@ function Rules() {
             </ol>
           </li>
           <li>
-            Players must calculate the positioning and direction of their tank, the power of their shot, the type of ammunition to use, and other strategic decisions.
+            Players must calculate the positioning and direction of their tank, the power of their shot, the type of ammunition to use, and where to move.
           </li>
           <li>
-            Use the arrow keys to move the turret, change the power, and spacebar to shoot! 
-          </li>
-          <li>
-            Based on performance in the matches, players will earn rewards that can be used to upgrade their tanks (statistics and ammunition).
+            <strong>Controls:</strong>
+            <ul className="controls-list">
+              <li><strong>↑</strong> Change turret angle up</li>
+              <li><strong>↓</strong> Change turret angle down</li>
+              <li><strong>←</strong> Decrease shot power</li>
+              <li><strong>→</strong> Increase shot power</li>
+              <li><strong>SPACE</strong> Shoot projectile</li>
+              <li><strong>CLICK</strong> Move tank to a valid location</li>
+            </ul>
           </li>
         </ol>
       </div>
