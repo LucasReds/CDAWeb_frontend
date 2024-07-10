@@ -34,7 +34,7 @@ function Rules() {
               <li><strong>CLICK</strong> Move tank to a valid location</li>
             </ul>
           </li>
-        </ol>
+        </ul>
       </div>
     </div>
   );
